@@ -1,0 +1,25 @@
+Manifest-Version: 1.0
+Rsrc-Class-Path: ./ postgresql-42.2.5.jar selenium-chrome-driver-3.141
+ .59.jar selenium-api-3.141.59.jar selenium-remote-driver-3.141.59.jar
+  byte-buddy-1.8.15.jar commons-exec-1.3.jar guava-25.0-jre.jar jsr305
+ -1.3.9.jar checker-compat-qual-2.0.0.jar error_prone_annotations-2.1.
+ 3.jar j2objc-annotations-1.1.jar animal-sniffer-annotations-1.14.jar 
+ okhttp-3.11.0.jar okio-1.14.0.jar selenium-firefox-driver-3.141.59.ja
+ r junit-4.12.jar hamcrest-core-1.3.jar selenium-core-1.0.1.jar seleni
+ um-java-3.4.0.jar selenium-edge-driver-3.4.0.jar selenium-ie-driver-3
+ .4.0.jar selenium-opera-driver-3.4.0.jar selenium-safari-driver-3.4.0
+ .jar selenium-support-3.4.0.jar cglib-nodep-3.2.4.jar commons-lang3-3
+ .5.jar commons-codec-1.10.jar commons-io-2.5.jar commons-logging-1.2.
+ jar sac-1.3.jar cssparser-0.9.22.jar gson-2.8.0.jar htmlunit-2.26.jar
+  htmlunit-core-js-2.26.jar neko-htmlunit-2.25.jar httpclient-4.5.3.ja
+ r httpcore-4.4.6.jar httpmime-4.5.3.jar jetty-io-9.4.1.v20170120.jar 
+ jetty-util-9.4.1.v20170120.jar jna-4.1.0.jar jna-platform-4.1.0.jar p
+ hantomjsdriver-1.4.0.jar htmlunit-driver-2.26.jar javax.servlet-api-3
+ .1.0.jar websocket-api-9.4.3.v20170317.jar websocket-client-9.4.3.v20
+ 170317.jar jetty-client-9.4.3.v20170317.jar jetty-http-9.4.3.v2017031
+ 7.jar websocket-common-9.4.3.v20170317.jar serializer-2.7.2.jar xalan
+ -2.7.2.jar xercesImpl-2.11.0.jar xml-apis-1.4.01.jar
+Class-Path: .
+Rsrc-Main-Class: myProject.myMain
+Main-Class: org.eclipse.jdt.internal.jarinjarloader.JarRsrcLoader
+
