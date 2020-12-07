@@ -335,7 +335,7 @@ public class nce_end_date{
 					   }
 						
 						//Populate create fields
-						for (int ctr = 1; ctr <= 33; ctr++) {
+						for (int ctr = 1; ctr <= 29; ctr++) {
 							 String ctrStr=Integer.toString(ctr);
 							
 						if (!dataList.get(ctr+12).isEmpty()) {
@@ -370,9 +370,9 @@ public class nce_end_date{
 									field.sendKeys(dataList.get(ctr+12).trim());
 									field.sendKeys(Keys.TAB);	
 									Thread.sleep(1000);
-									
-									invalidataHandler();if (!error.isEmpty()) {break;}
+
 									alertHandler();	if (!error.isEmpty()) {break;}
+									invalidataHandler();if (!error.isEmpty()) {break;}
 									break;
 						        } catch (Exception e) {}    
 						     }
@@ -448,7 +448,7 @@ public class nce_end_date{
 				DesiredCapabilities capabilities;	    
 				capabilities = DesiredCapabilities.chrome();
 				ChromeOptions options = new ChromeOptions(); 
-						//options.addArguments("--headless");			    	    
+						options.addArguments("--headless");			    	    
 			    	    options.addArguments("--disable-extensions");   
 			    	    options.addArguments("--disable-gpu");   
 			    	    options.addArguments("--no-sandbox");   
@@ -824,15 +824,18 @@ public class nce_end_date{
 		}
 	}
 	}	
+
+		
 		public static void alertHandler() {
 			for (int x = 0; x < 3; x++) {
 			try {
 				WebDriverWait wait = new WebDriverWait(driver, 1);
 				Alert alert = wait.until(ExpectedConditions.alertIsPresent());
+				String alertmessage = alert.getText();
 				alert.accept();
-				Thread.sleep(1000);
-			     error="[Error] Data provided missing or not found";
-				break;
+				System.out.println("[ALERT MESSAGE]:"+alertmessage);
+			    error=alertmessage;
+				return;
 			} catch (Exception e) {
 			}
 		   }
