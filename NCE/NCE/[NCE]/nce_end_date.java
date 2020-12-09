@@ -127,7 +127,9 @@ public class nce_end_date{
 							                	currentStatus = statusWait();
 							                	System.out.println("REQUEST STATUS: "+currentStatus);
 							                	//MAIN METHOD
-							                	populate_projectDetails(requestIdStr, fteDateStr, dataList);
+							                	if(currentStatus.trim().contains("In Planning") || currentStatus.trim().contains("Position Created in SP")) {
+							                		populate_projectDetails(requestIdStr, fteDateStr, dataList);
+							                	}
 							                	//STATUS WAIT
 							                	statusElemWait();currentStatus = statusWait();
 							                	Thread.sleep(100);
@@ -177,6 +179,17 @@ public class nce_end_date{
 							                		  }
 							                	}
 							                	
+
+							                	if (currentStatus.trim().contains("Pending Dmd Planner Approval")) {
+							                		  System.out.println("RECORD ["+id+"] - REQUEST ID ["+requestIdStr+"] >> " + currentStatus); 
+							                		  
+							                		  if(approveBtnDmdPlanner()) {
+							                			  approveADLDmdPlanner().click();
+							                		  } else {
+							                			  error="[Error] Approval Button Not Activated"; 
+							                		  }
+							                	  }
+							                	
 						                	
 						                	error();
 						                	
@@ -217,10 +230,18 @@ public class nce_end_date{
 							                	  statusElemWait();currentStatus = statusWait();
 								                  Thread.sleep(100);
 								                  
-							                	  if (currentStatus.trim().contains("Pending Dmd Planner Approval")) {
+								                  if (currentStatus.trim().contains("Pending Dmd Planner Approval")) {
 							                		  System.out.println("RECORD ["+id+"] - REQUEST ID ["+requestIdStr+"] >> " + currentStatus); 
-							                		  error="";
+							                		  
+							                		  if(approveBtnDmdPlanner()) {
+							                			  approveADLDmdPlanner().click();
+							                		  } else {
+							                			  error="[Error] Approval Button Not Activated"; 
+							                		  }
 							                	  }
+								                  
+								                  statusElemWait();currentStatus = statusWait();
+								                  Thread.sleep(100);
 							                	  //Check Move to SP then click Move to sp button
 							                	  if (currentStatus.trim().contains("PLM Approved")) {
 							                		  System.out.println("RECORD ["+id+"] - REQUEST ID ["+requestIdStr+"] >> " + currentStatus);
@@ -231,7 +252,7 @@ public class nce_end_date{
 								                  Thread.sleep(100);
 								                  
 								                  if (currentStatus.trim().contains("Position Created in SP")) {
-													  error="[Error] Issue on credential"; 
+													  error="DONE"; 
 												  }
 					                	  }
 				                	} else {
@@ -273,7 +294,45 @@ public class nce_end_date{
         }
         exit(0);
     }
+    
+	public static WebElement approveADLDmdPlanner() {
+		for (int x = 0; x < 20; x++) {
+		try {
+			WebDriverWait wait = new WebDriverWait(driver, 10);
+			By elemPath = By.xpath("//*[@id=\"DB0_0\"]");
+			WebElement elem = wait.until(ExpectedConditions.presenceOfElementLocated(elemPath));
+			wait.until(ExpectedConditions.elementToBeClickable(elem));
+			WebElement element = driver.findElement(By.xpath("//*[@id=\"DB0_0\"]"));
+			System.out.println("RECORD ["+id+"] - PROJECT ID ["+requestIdStr+"] >> [Approved DMD PLANNER]");
+			return element;
+		} catch (Exception e) {
+			driver.navigate().refresh();
+			System.out.println("[WAITING] Approval BUTTON");
+		}
+		}
+		return null;
+	}
    
+	public static boolean approveBtnDmdPlanner() {
+		for (int x = 0; x < 20; x++) {
+		try {
+			Thread.sleep(100);
+			WebDriverWait wait = new WebDriverWait(driver, 5);
+			By elemPath = By.id("DB0_0");
+			WebElement elem = wait.until(ExpectedConditions.presenceOfElementLocated(elemPath));
+			System.out.println("Approval Button Activated: "+ elem.isDisplayed());
+			if (elem.isDisplayed()) {
+				return true;
+			}else{
+
+				error="Approval button not active";
+				return false;
+			}
+		} catch (Exception e) {
+		}
+		}
+		return false;
+	}
 	
 	public static void populate_projectDetails(String reqIDVal, String fteDateVal, List<String> dataArryVal) throws Throwable {
 		for (int x = 0; x < 10; x++) {
@@ -335,7 +394,7 @@ public class nce_end_date{
 					   }
 						
 						//Populate create fields
-						for (int ctr = 1; ctr <= 29; ctr++) {
+						for (int ctr = 1; ctr <= 29	; ctr++) {
 							 String ctrStr=Integer.toString(ctr);
 							
 						if (!dataList.get(ctr+12).isEmpty()) {
@@ -344,41 +403,39 @@ public class nce_end_date{
 						            prop.load(input);
 						            
 						            System.out.println(ctr+"|"+prop.getProperty(ctrStr)+"|"+dataList.get(ctr+12));
+									
 						            if (ctr==3) {
-										System.out.println("Country");
+						            	System.out.println("Country");
 										Select DropDown = new Select(driver.findElement(By.id("REQD.P.COUNTRY")));
 
 										DropDown.selectByIndex(0);
 										DropDown.selectByVisibleText(dataList.get(ctr+12));
+									} else {
+										  By fieldPath = By.id(prop.getProperty(ctrStr));
+											wait.until(ExpectedConditions.presenceOfElementLocated(fieldPath));
+											wait.until(ExpectedConditions.elementToBeClickable(fieldPath));
+											WebElement field = wait.until(ExpectedConditions.presenceOfElementLocated(fieldPath));
+											field.clear();
+											
+											if (ctr==8) {
+												field.clear();
+											}
+
+											
+											Thread.sleep(200);
+											field.sendKeys(dataList.get(ctr+12).trim());
+											field.sendKeys(Keys.TAB);
 									}
-						            By fieldPath = By.id(prop.getProperty(ctrStr));
-									wait.until(ExpectedConditions.presenceOfElementLocated(fieldPath));
-									wait.until(ExpectedConditions.elementToBeClickable(fieldPath));
-									WebElement field = wait.until(ExpectedConditions.presenceOfElementLocated(fieldPath));
-									field.clear();
-									
-									Thread.sleep(100);
-									error();if (error()) {break;}
-									invalidataHandler();if (!error.isEmpty()) {break;}
-									alertHandler();	if (!error.isEmpty()) {break;}
-									
-									if (ctr==8) {
-										field.clear();
-									}
-									
-									Thread.sleep(200);
-									field.sendKeys(dataList.get(ctr+12).trim());
-									field.sendKeys(Keys.TAB);	
-									Thread.sleep(1000);
+						            
+						          
+
 
 									alertHandler();	if (!error.isEmpty()) {break;}
 									invalidataHandler();if (!error.isEmpty()) {break;}
-									break;
-						        } catch (Exception e) {}    
+									
+						        } catch (Exception e) {}      
 						     }
 						   }			
-						
-				System.out.println("BREAK");
 				break;
 					
 		}
@@ -950,7 +1007,6 @@ public class nce_end_date{
 			String HeaderTxt = driver.findElement(By.xpath("//*[@id=\"emptyFieldsLink\"]")).getText();
 			By elemPath = By.id("errorInformation");
 			WebElement elem = wait.until(ExpectedConditions.presenceOfElementLocated(elemPath));
-			System.out.println("eRROR"+HeaderTxt);
 			if (elem.isDisplayed()) {
 				 error="[Error]"+HeaderTxt;
 				return true;

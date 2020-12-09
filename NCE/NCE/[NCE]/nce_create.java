@@ -154,8 +154,16 @@ public class nce_create {
 							                  
 						                	  if (currentStatus.trim().contains("Pending Dmd Planner Approval")) {
 						                		  System.out.println("RECORD ["+id+"] - PROJECT ID ["+projIDStr+"] >> " + currentStatus); 
-						                		  error="";
+						                		  if(approveBtnDmdPlanner()) {
+						                			  approveADLDmdPlanner().click();
+						                		  } else {
+						                			  error="[Error] Approval Button Not Activated"; 
+						                		  }
 						                	  }
+						                	  
+						                	  statusElemWait();currentStatus = statusWait();
+							                  Thread.sleep(100);
+							                  
 						                	  //CHECK STATUS IF MOVE TO SP,THEN CLICK MOVETO SP BTN
 						                	  if (currentStatus.trim().contains("PLM Approved")) {
 						                		  System.out.println("RECORD ["+id+"] - PROJECT ID ["+projIDStr+"] >> " + currentStatus);
@@ -166,7 +174,7 @@ public class nce_create {
 							                  Thread.sleep(100);
 							                  
 							                  if (currentStatus.trim().contains("Position Created in SP")) {
-												  error="[Error] Issue on credential"; 
+												  error="DONE"; 
 											  }
 
 							                  
@@ -221,6 +229,45 @@ public class nce_create {
         }
         exit(0);
     }
+    
+	public static WebElement approveADLDmdPlanner() {
+		for (int x = 0; x < 20; x++) {
+		try {
+			WebDriverWait wait = new WebDriverWait(driver, 10);
+			By elemPath = By.xpath("//*[@id=\"DB0_0\"]");
+			WebElement elem = wait.until(ExpectedConditions.presenceOfElementLocated(elemPath));
+			wait.until(ExpectedConditions.elementToBeClickable(elem));
+			WebElement element = driver.findElement(By.xpath("//*[@id=\"DB0_0\"]"));
+			System.out.println("RECORD ["+id+"] - PROJECT ID ["+projIDStr+"] >> [Approved DMD PLANNER]");
+			return element;
+		} catch (Exception e) {
+			driver.navigate().refresh();
+			System.out.println("[WAITING] Approval BUTTON");
+		}
+		}
+		return null;
+	}
+    
+	public static boolean approveBtnDmdPlanner() {
+		for (int x = 0; x < 20; x++) {
+		try {
+			Thread.sleep(100);
+			WebDriverWait wait = new WebDriverWait(driver, 5);
+			By elemPath = By.id("DB0_0");
+			WebElement elem = wait.until(ExpectedConditions.presenceOfElementLocated(elemPath));
+			System.out.println("Approval Button Activated: "+ elem.isDisplayed());
+			if (elem.isDisplayed()) {
+				return true;
+			}else{
+
+				error="Approval button not active";
+				return false;
+			}
+		} catch (Exception e) {
+		}
+		}
+		return false;
+	}
     
 	public static boolean error() {
 		for (int x = 0; x < 20; x++) {
@@ -433,7 +480,7 @@ public class nce_create {
 				DesiredCapabilities capabilities;	    
 				capabilities = DesiredCapabilities.chrome();
 				ChromeOptions options = new ChromeOptions(); 
-//						options.addArguments("--headless");	    	    
+						options.addArguments("--headless");	    	    
 			    	    options.addArguments("--disable-extensions");   
 			    	    options.addArguments("--disable-gpu");   
 			    	    options.addArguments("--no-sandbox");   

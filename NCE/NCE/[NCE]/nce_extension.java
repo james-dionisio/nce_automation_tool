@@ -126,8 +126,11 @@ public class nce_extension {
 					                	      	//STATUS WAIT
 							                	currentStatus = statusWait();
 							                	System.out.println("REQUEST STATUS: "+currentStatus);
-							                	//MAIN METHOD
-							                	populate_projectDetails(requestIdStr, fteDateStr, dataList);
+							                	//LATEST 12/8/2020 DMD PLANNER APPROVAL
+							                	//MAIN METHOD IF STATUS IS IN PLANNING OR POSITION TO SP MOVE TO MAIN METHOD
+							                	if(currentStatus.trim().contains("In Planning") || currentStatus.trim().contains("Position Created in SP")) {
+							                		populate_projectDetails(requestIdStr, fteDateStr, dataList);
+							                	}
 							                	//STATUS WAIT
 							                	statusElemWait();currentStatus = statusWait();
 							                	Thread.sleep(100);
@@ -177,6 +180,16 @@ public class nce_extension {
 							                		  }
 							                	}
 							                	
+							                	if (currentStatus.trim().contains("Pending Dmd Planner Approval")) {
+							                		  System.out.println("RECORD ["+id+"] - REQUEST ID ["+requestIdStr+"] >> " + currentStatus); 
+							                		  
+							                		  if(approveBtnDmdPlanner()) {
+							                			  approveADLDmdPlanner().click();
+							                		  } else {
+							                			  error="[Error] Approval Button Not Activated"; 
+							                		  }
+							                	  }
+							                	
 						                	
 						                	error();
 						                	
@@ -219,8 +232,16 @@ public class nce_extension {
 								                  
 							                	  if (currentStatus.trim().contains("Pending Dmd Planner Approval")) {
 							                		  System.out.println("RECORD ["+id+"] - REQUEST ID ["+requestIdStr+"] >> " + currentStatus); 
-							                		  error="";
+							                		  
+							                		  if(approveBtnDmdPlanner()) {
+							                			  approveADLDmdPlanner().click();
+							                		  } else {
+							                			  error="[Error] Approval Button Not Activated"; 
+							                		  }
 							                	  }
+
+							                	  statusElemWait();currentStatus = statusWait();
+								                  Thread.sleep(100);
 							                	  //Check Move to SP then click Move to sp button
 							                	  if (currentStatus.trim().contains("PLM Approved")) {
 							                		  System.out.println("RECORD ["+id+"] - REQUEST ID ["+requestIdStr+"] >> " + currentStatus);
@@ -420,7 +441,7 @@ public class nce_extension {
 				DesiredCapabilities capabilities;	    
 				capabilities = DesiredCapabilities.chrome();
 				ChromeOptions options = new ChromeOptions(); 
-						options.addArguments("--headless");			    	    
+//						options.addArguments("--headless");			    	    
 			    	    options.addArguments("--disable-extensions");   
 			    	    options.addArguments("--disable-gpu");   
 			    	    options.addArguments("--no-sandbox");   
@@ -616,6 +637,24 @@ public class nce_extension {
 			wait.until(ExpectedConditions.elementToBeClickable(elem));
 			WebElement element = driver.findElement(By.xpath("//*[@id=\"DB1_0\"]"));
 			System.out.println("RECORD ["+id+"] - PROJECT ID ["+requestIdStr+"] >> [Approved ADL]");
+			return element;
+		} catch (Exception e) {
+			driver.navigate().refresh();
+			System.out.println("[WAITING] Approval BUTTON");
+		}
+		}
+		return null;
+	}
+	
+	public static WebElement approveADLDmdPlanner() {
+		for (int x = 0; x < 20; x++) {
+		try {
+			WebDriverWait wait = new WebDriverWait(driver, 10);
+			By elemPath = By.xpath("//*[@id=\"DB0_0\"]");
+			WebElement elem = wait.until(ExpectedConditions.presenceOfElementLocated(elemPath));
+			wait.until(ExpectedConditions.elementToBeClickable(elem));
+			WebElement element = driver.findElement(By.xpath("//*[@id=\"DB0_0\"]"));
+			System.out.println("RECORD ["+id+"] - PROJECT ID ["+requestIdStr+"] >> [Approved DMD PLANNER]");
 			return element;
 		} catch (Exception e) {
 			driver.navigate().refresh();
@@ -955,6 +994,26 @@ public class nce_extension {
 		return false;
 	}
 	
+	public static boolean approveBtnDmdPlanner() {
+		for (int x = 0; x < 20; x++) {
+		try {
+			Thread.sleep(100);
+			WebDriverWait wait = new WebDriverWait(driver, 5);
+			By elemPath = By.id("DB0_0");
+			WebElement elem = wait.until(ExpectedConditions.presenceOfElementLocated(elemPath));
+			System.out.println("Approval Button Activated: "+ elem.isDisplayed());
+			if (elem.isDisplayed()) {
+				return true;
+			}else{
+
+				error="Approval button not active";
+				return false;
+			}
+		} catch (Exception e) {
+		}
+		}
+		return false;
+	}
 	public static boolean accessError() {
 		for (int x = 0; x < 20; x++) {
 		try {
