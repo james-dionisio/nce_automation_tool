@@ -250,6 +250,14 @@ public class nce_extension {
 							                	  
 							                	  statusElemWait();currentStatus = statusWait();
 								                  Thread.sleep(100);
+							                	  //Check Move to SP then click Move to sp button
+							                	  if (currentStatus.trim().contains("PLM Approved")) {
+							                		  System.out.println("RECORD ["+id+"] - REQUEST ID ["+requestIdStr+"] >> " + currentStatus);
+							                		  moveToSp().click();
+							                	  }
+							                	  
+							                	  statusElemWait();currentStatus = statusWait();
+								                  Thread.sleep(100);
 								                  
 								                  if (currentStatus.trim().contains("Position Created in SP")) {
 													  error="DONE"; 
