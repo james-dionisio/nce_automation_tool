@@ -45,6 +45,7 @@ public class nce_extension {
     protected static WebDriver driver;
     protected static String id;
 	protected static String requestIdStr;
+	protected static String positionID;
 	protected static String fteDateStr;
 	protected static String reasonStr;
 	protected static String parallelKey;
@@ -99,7 +100,7 @@ public class nce_extension {
 	    	        try {
 	    	            if (connection != null) {
 	   	                stmt = connection.createStatement();
-	   	                update = connection.prepareStatement("UPDATE nce_extension SET key_status = ?, request_id = ?, status = ?, duration = ? WHERE parallel_key=? AND id = ?;");
+	   	                update = connection.prepareStatement("UPDATE nce_extension SET key_status = ?, request_id = ?, status = ?, duration = ?, position_id = ? WHERE parallel_key=? AND id = ?;");
 	   	                rs = stmt.executeQuery(rsQuery);	
 	   			                while (rs.next()) {
 	   			                	startRec= Instant.now();
@@ -252,6 +253,14 @@ public class nce_extension {
 								                  Thread.sleep(100);
 							                	  //Check Move to SP then click Move to sp button
 							                	  if (currentStatus.trim().contains("PLM Approved")) {
+							                		  System.out.println("RECORD ["+id+"] - REQUEST ID ["+requestIdStr+"] >> " + currentStatus);
+							                		  moveToSp().click();
+							                	  }
+							                	  
+							                	  statusElemWait();currentStatus = statusWait();
+								                  Thread.sleep(100);
+							                	  //Check Move to SP then click Move to sp button
+							                	  if (currentStatus.trim().contains("Staffing Approved")) {
 							                		  System.out.println("RECORD ["+id+"] - REQUEST ID ["+requestIdStr+"] >> " + currentStatus);
 							                		  moveToSp().click();
 							                	  }
@@ -571,8 +580,11 @@ public class nce_extension {
 			 update.setString(2, requestIdStr);
 	         update.setString(3, currentStatus);
 	         update.setLong(4, timeElapsedRec.toMillis());
-	         update.setString(5, thread);
-	         update.setString(6, id);
+	         if(positionId()) {
+		         update.setString(5, positionID);
+	         }
+	         update.setString(6, thread);
+	         update.setString(7, id);
 	         Thread.sleep(2000);
 	         break;
 		} catch (Exception e) {
@@ -971,6 +983,27 @@ public class nce_extension {
 			if (elem.isDisplayed()) {
 				System.out.println("[Error]"+HeaderTxt);
 				error="[Error]"+HeaderTxt;
+				return true;
+			}else{
+				return false;
+			}
+		} catch (Exception e) {
+		}
+		}
+		return false;
+	}
+	
+	public static boolean positionId() {
+		for (int x = 0; x < 20; x++) {
+		try {
+			Thread.sleep(100);
+			WebDriverWait wait = new WebDriverWait(driver, 5);
+			String HeaderTxt = driver.findElement(By.xpath("//*[@id=\"DRIVEN_P_7\"]")).getText();
+			By elemPath = By.id("DRIVEN_P_7");
+			WebElement elem = wait.until(ExpectedConditions.presenceOfElementLocated(elemPath));
+			if (elem.isDisplayed()) {
+				System.out.println("[Potition ID]"+HeaderTxt);
+				positionID = HeaderTxt;
 				return true;
 			}else{
 				return false;
