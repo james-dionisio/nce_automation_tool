@@ -510,7 +510,7 @@ public class nce_create {
 	    	WebElement password = driver.findElement(By.name("PASSWORD"));
 	    	WebElement loginBtn = driver.findElement(By.id("loginbtn"));
 	    	username.sendKeys("jdionisio4");
-	    	password.sendKeys("Jcsd(1206");
+	    	password.sendKeys("Jcsd!1206");
 	    	loginBtn.click();
 			break;
 		} catch (Exception e) {
