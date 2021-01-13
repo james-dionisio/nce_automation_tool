@@ -214,13 +214,36 @@ public class nce_update {
 							                	  }
 							                	  statusElemWait();currentStatus = statusWait();
 								                  Thread.sleep(100);
-								                  
+								             
 							                	  if (currentStatus.trim().contains("Pending Dmd Planner Approval")) {
 							                		  System.out.println("RECORD ["+id+"] - REQUEST ID ["+requestIdStr+"] >> " + currentStatus); 
-							                		  error="";
+							                		  
+							                		  if(approveBtnDmdPlanner()) {
+							                			  approveADLDmdPlanner().click();
+							                		  } else {
+							                			  error="[Error] Approval Button Not Activated"; 
+							                		  }
 							                	  }
+							                	  statusElemWait();currentStatus = statusWait();
+								                  Thread.sleep(100);
 							                	  //Check Move to SP then click Move to sp button
 							                	  if (currentStatus.trim().contains("PLM Approved")) {
+							                		  System.out.println("RECORD ["+id+"] - REQUEST ID ["+requestIdStr+"] >> " + currentStatus);
+							                		  moveToSp().click();
+							                	  }
+							                	  
+							                	  statusElemWait();currentStatus = statusWait();
+								                  Thread.sleep(100);
+							                	  //Check Move to SP then click Move to sp button
+							                	  if (currentStatus.trim().contains("PLM Approved")) {
+							                		  System.out.println("RECORD ["+id+"] - REQUEST ID ["+requestIdStr+"] >> " + currentStatus);
+							                		  moveToSp().click();
+							                	  }
+							                	  
+							                	  statusElemWait();currentStatus = statusWait();
+								                  Thread.sleep(100);
+							                	  //Check Move to SP then click Move to sp button
+							                	  if (currentStatus.trim().contains("Staffing Approved")) {
 							                		  System.out.println("RECORD ["+id+"] - REQUEST ID ["+requestIdStr+"] >> " + currentStatus);
 							                		  moveToSp().click();
 							                	  }
@@ -379,21 +402,31 @@ public class nce_update {
 										DropDown.selectByIndex(0);
 										DropDown.selectByVisibleText(dataList.get(ctr+12));
 									} else {
-										  By fieldPath = By.id(prop.getProperty(ctrStr));
-											wait.until(ExpectedConditions.presenceOfElementLocated(fieldPath));
-											wait.until(ExpectedConditions.elementToBeClickable(fieldPath));
-											WebElement field = wait.until(ExpectedConditions.presenceOfElementLocated(fieldPath));
-											field.clear();
-											
-											if (ctr==8) {
-												field.clear();
-											}
+							            if (ctr==13) {
+							            	System.out.println("Reason Position Needed");
+											Select DropDown = new Select(driver.findElement(By.id("REQD.P.WFM_REASON_POSITION_NEEDED")));
 
-											
-											Thread.sleep(200);
-											field.sendKeys(dataList.get(ctr+12).trim());
-											field.sendKeys(Keys.TAB);
+											DropDown.selectByIndex(0);
+											DropDown.selectByVisibleText(dataList.get(ctr+12));
+										} else {
+											  By fieldPath = By.id(prop.getProperty(ctrStr));
+												wait.until(ExpectedConditions.presenceOfElementLocated(fieldPath));
+												wait.until(ExpectedConditions.elementToBeClickable(fieldPath));
+												WebElement field = wait.until(ExpectedConditions.presenceOfElementLocated(fieldPath));
+												field.clear();
+												
+												if (ctr==8) {
+													field.clear();
+												}
+
+												
+												Thread.sleep(200);
+												field.sendKeys(dataList.get(ctr+12).trim());
+												field.sendKeys(Keys.TAB);
+										}
 									}
+						            
+
 						            
 						          
 
@@ -418,6 +451,44 @@ public class nce_update {
 		
 	  }
 		
+	}
+	
+	public static boolean approveBtnDmdPlanner() {
+		for (int x = 0; x < 20; x++) {
+		try {
+			Thread.sleep(100);
+			WebDriverWait wait = new WebDriverWait(driver, 5);
+			By elemPath = By.id("DB0_0");
+			WebElement elem = wait.until(ExpectedConditions.presenceOfElementLocated(elemPath));
+			System.out.println("Approval Button Activated: "+ elem.isDisplayed());
+			if (elem.isDisplayed()) {
+				return true;
+			}else{
+
+				error="Approval button not active";
+				return false;
+			}
+		} catch (Exception e) {
+		}
+		}
+		return false;
+	}
+	public static WebElement approveADLDmdPlanner() {
+		for (int x = 0; x < 20; x++) {
+		try {
+			WebDriverWait wait = new WebDriverWait(driver, 10);
+			By elemPath = By.xpath("//*[@id=\"DB0_0\"]");
+			WebElement elem = wait.until(ExpectedConditions.presenceOfElementLocated(elemPath));
+			wait.until(ExpectedConditions.elementToBeClickable(elem));
+			WebElement element = driver.findElement(By.xpath("//*[@id=\"DB0_0\"]"));
+			System.out.println("RECORD ["+id+"] - PROJECT ID ["+requestIdStr+"] >> [Approved DMD PLANNER]");
+			return element;
+		} catch (Exception e) {
+			driver.navigate().refresh();
+			System.out.println("[WAITING] Approval BUTTON");
+		}
+		}
+		return null;
 	}
 
 	//STEP 1

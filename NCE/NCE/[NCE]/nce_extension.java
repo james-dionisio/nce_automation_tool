@@ -408,26 +408,33 @@ public class nce_extension {
 						            System.out.println(ctr+"|"+prop.getProperty(ctrStr)+"|"+dataList.get(ctr+12));
 									
 						            if (ctr==3) {
-						            	System.out.println("Country");
 										Select DropDown = new Select(driver.findElement(By.id("REQD.P.COUNTRY")));
 
 										DropDown.selectByIndex(0);
 										DropDown.selectByVisibleText(dataList.get(ctr+12));
 									} else {
-										  By fieldPath = By.id(prop.getProperty(ctrStr));
-											wait.until(ExpectedConditions.presenceOfElementLocated(fieldPath));
-											wait.until(ExpectedConditions.elementToBeClickable(fieldPath));
-											WebElement field = wait.until(ExpectedConditions.presenceOfElementLocated(fieldPath));
-											field.clear();
-											
-											if (ctr==8) {
-												field.clear();
-											}
+										if (ctr==13) {
+							            	System.out.println("Reason Position Needed");
+											Select DropDown = new Select(driver.findElement(By.id("REQD.P.WFM_REASON_POSITION_NEEDED")));
 
-											
-											Thread.sleep(200);
-											field.sendKeys(dataList.get(ctr+12).trim());
-											field.sendKeys(Keys.TAB);
+											DropDown.selectByIndex(0);
+											DropDown.selectByVisibleText(dataList.get(ctr+12));
+										} else {
+											  By fieldPath = By.id(prop.getProperty(ctrStr));
+												wait.until(ExpectedConditions.presenceOfElementLocated(fieldPath));
+												wait.until(ExpectedConditions.elementToBeClickable(fieldPath));
+												WebElement field = wait.until(ExpectedConditions.presenceOfElementLocated(fieldPath));
+												field.clear();
+												
+												if (ctr==8) {
+													field.clear();
+												}
+
+												
+												Thread.sleep(200);
+												field.sendKeys(dataList.get(ctr+12).trim());
+												field.sendKeys(Keys.TAB);
+										}
 									}
 						            
 						          

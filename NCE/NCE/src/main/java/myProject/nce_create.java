@@ -165,8 +165,23 @@ public class nce_create {
 						                	  statusElemWait();currentStatus = statusWait();
 							                  Thread.sleep(100);
 							                  
-						                	  //CHECK STATUS IF MOVE TO SP,THEN CLICK MOVETO SP BTN
+							                  if (currentStatus.trim().contains("PLM Approved")) {
+						                		  System.out.println("RECORD ["+id+"] - REQUEST ID ["+projIDStr+"] >> " + currentStatus);
+						                		  moveToSp().click();
+						                	  }
+						                	  
+						                	  statusElemWait();currentStatus = statusWait();
+							                  Thread.sleep(100);
+						                	  //Check Move to SP then click Move to sp button
 						                	  if (currentStatus.trim().contains("PLM Approved")) {
+						                		  System.out.println("RECORD ["+id+"] - PROJECT ID ["+projIDStr+"] >> " + currentStatus + " 2nd Attempt");
+						                		  moveToSp().click();
+						                	  }
+						                	  
+						                	  statusElemWait();currentStatus = statusWait();
+							                  Thread.sleep(100);
+						                	  //Check Move to SP then click Move to sp button
+						                	  if (currentStatus.trim().contains("Staffing Approved")) {
 						                		  System.out.println("RECORD ["+id+"] - PROJECT ID ["+projIDStr+"] >> " + currentStatus);
 						                		  moveToSp().click();
 						                	  }
@@ -621,27 +636,6 @@ public class nce_create {
 		}		
 	}
 	
-	public static boolean positionId() {
-		for (int x = 0; x < 20; x++) {
-		try {
-			Thread.sleep(100);
-			WebDriverWait wait = new WebDriverWait(driver, 5);
-			String HeaderTxt = driver.findElement(By.xpath("//*[@id=\"DRIVEN_P_7\"]")).getText();
-			By elemPath = By.id("DRIVEN_P_7");
-			WebElement elem = wait.until(ExpectedConditions.presenceOfElementLocated(elemPath));
-			if (elem.isDisplayed()) {
-				System.out.println("[Potition ID]"+HeaderTxt);
-				positionID = HeaderTxt;
-				return true;
-			}else{
-				return false;
-			}
-		} catch (Exception e) {
-		}
-		}
-		return false;
-	}
-	
 //	
 	private static void ongoingUpateWithReqId() {
 		for (int x = 0; x < 20; x++) {
@@ -669,6 +663,26 @@ public class nce_create {
 			System.out.println("[RETRY] UPDATE FAILED");
 		}
 		}		
+	}
+	public static boolean positionId() {
+		for (int x = 0; x < 20; x++) {
+		try {
+			Thread.sleep(100);
+			WebDriverWait wait = new WebDriverWait(driver, 5);
+			String HeaderTxt = driver.findElement(By.xpath("//*[@id=\"DRIVEN_P_7\"]")).getText();
+			By elemPath = By.id("DRIVEN_P_7");
+			WebElement elem = wait.until(ExpectedConditions.presenceOfElementLocated(elemPath));
+			if (elem.isDisplayed()) {
+				System.out.println("[Potition ID]"+HeaderTxt);
+				positionID = HeaderTxt;
+				return true;
+			}else{
+				return false;
+			}
+		} catch (Exception e) {
+		}
+		}
+		return false;
 	}
 	
 	public static WebElement reqID() {
