@@ -44,6 +44,7 @@ public class nce_create {
     protected static WebDriver driver;
     protected static String id;
 	protected static String projIDStr;
+	protected static String positionID;
 	protected static String fteDateStr;
 	protected static String reasonStr;
 	protected static String parallelKey;
@@ -99,7 +100,7 @@ public class nce_create {
 	    	             
 	    	            startRec= Instant.now();
 	   	                stmt = connection.createStatement();
-	   	             update = connection.prepareStatement("UPDATE nce_create SET key_status = ?, request_id = ?, status = ?, duration = ? WHERE parallel_key=? AND id = ?;");
+	   	             update = connection.prepareStatement("UPDATE nce_create SET key_status = ?, request_id = ?, status = ?, duration = ?, position_id = ? WHERE parallel_key=? AND id = ?;");
 	   	                rs = stmt.executeQuery(rsQuery);	
 	   			                while (rs.next()) {	
 	   			                	System.out.println("");
@@ -164,8 +165,23 @@ public class nce_create {
 						                	  statusElemWait();currentStatus = statusWait();
 							                  Thread.sleep(100);
 							                  
-						                	  //CHECK STATUS IF MOVE TO SP,THEN CLICK MOVETO SP BTN
+							                  if (currentStatus.trim().contains("PLM Approved")) {
+						                		  System.out.println("RECORD ["+id+"] - REQUEST ID ["+projIDStr+"] >> " + currentStatus);
+						                		  moveToSp().click();
+						                	  }
+						                	  
+						                	  statusElemWait();currentStatus = statusWait();
+							                  Thread.sleep(100);
+						                	  //Check Move to SP then click Move to sp button
 						                	  if (currentStatus.trim().contains("PLM Approved")) {
+						                		  System.out.println("RECORD ["+id+"] - PROJECT ID ["+projIDStr+"] >> " + currentStatus + " 2nd Attempt");
+						                		  moveToSp().click();
+						                	  }
+						                	  
+						                	  statusElemWait();currentStatus = statusWait();
+							                  Thread.sleep(100);
+						                	  //Check Move to SP then click Move to sp button
+						                	  if (currentStatus.trim().contains("Staffing Approved")) {
 						                		  System.out.println("RECORD ["+id+"] - PROJECT ID ["+projIDStr+"] >> " + currentStatus);
 						                		  moveToSp().click();
 						                	  }
@@ -607,8 +623,11 @@ public class nce_create {
 			 update.setString(2, reqID);
 	         update.setString(3, currentStatus);
 	         update.setLong(4, timeElapsedRec.toMillis());
-	         update.setString(5, thread);
-	         update.setString(6, id);
+	         if(positionId()) {
+		         update.setString(5, positionID);
+	         }
+	         update.setString(6, thread);
+	         update.setString(7, id);
 	         Thread.sleep(2000);
 	         break;
 		} catch (Exception e) {
@@ -633,14 +652,37 @@ public class nce_create {
 			 update.setString(2, reqID);
 	         update.setString(3, currentStatus);
 	         update.setLong(4, timeElapsedRec.toMillis());
-	         update.setString(5, thread);
-	         update.setString(6, id);
+	         if(positionId()) {
+		         update.setString(5, positionID);
+	         }
+	         update.setString(6, thread);
+	         update.setString(7, id);
 	         Thread.sleep(2000);
 	         break;
 		} catch (Exception e) {
 			System.out.println("[RETRY] UPDATE FAILED");
 		}
 		}		
+	}
+	public static boolean positionId() {
+		for (int x = 0; x < 20; x++) {
+		try {
+			Thread.sleep(100);
+			WebDriverWait wait = new WebDriverWait(driver, 5);
+			String HeaderTxt = driver.findElement(By.xpath("//*[@id=\"DRIVEN_P_7\"]")).getText();
+			By elemPath = By.id("DRIVEN_P_7");
+			WebElement elem = wait.until(ExpectedConditions.presenceOfElementLocated(elemPath));
+			if (elem.isDisplayed()) {
+				System.out.println("[Potition ID]"+HeaderTxt);
+				positionID = HeaderTxt;
+				return true;
+			}else{
+				return false;
+			}
+		} catch (Exception e) {
+		}
+		}
+		return false;
 	}
 	
 	public static WebElement reqID() {
