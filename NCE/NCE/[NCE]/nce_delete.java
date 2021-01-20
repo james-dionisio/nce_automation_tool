@@ -158,8 +158,8 @@ public class nce_delete {
 			WebElement username = driver.findElement(By.name("USER"));
 	    	WebElement password = driver.findElement(By.name("PASSWORD"));
 	    	WebElement loginBtn = driver.findElement(By.id("loginbtn"));
-	    	username.sendKeys("jricalde");
-	    	password.sendKeys("Busops.129");
+	    	username.sendKeys("jdionisio4");
+	    	password.sendKeys("Jcsd!1206");
 	    	loginBtn.click();
 			break;
 		} catch (Exception e) {
@@ -243,13 +243,13 @@ public class nce_delete {
 	private static void actions(String commentVal, String dateVal) {
 		for (int x = 0; x < 10; x++) {
 		try {
-			driver.switchTo().frame("pfmIframe");
+//			driver.switchTo().frame("pfmIframe");
 			cancelButton().click();
-			clearForecastDate().clear();clearForecastDate().sendKeys(dateVal);
+//			clearForecastDate().clear();clearForecastDate().sendKeys(dateVal);
 			Thread.sleep(1000);
 			cancelNote().sendKeys(commentVal);
-			//cancelFinal().click();
-			driver.switchTo().defaultContent();
+			cancelFinal().click();
+//			driver.switchTo().defaultContent();
 			break;
 		} catch (Exception e) {
 			System.out.println("[WAITING] ACTION REQUIRED");
@@ -334,10 +334,10 @@ public class nce_delete {
 		for (int x = 0; x < 20; x++) {
 		try {
 			WebDriverWait wait = new WebDriverWait(driver, 5);
-			By elemPath = By.id("btnCancel");
+			By elemPath = By.id("btnContinue");
 			WebElement elem = wait.until(ExpectedConditions.presenceOfElementLocated(elemPath));
 			wait.until(ExpectedConditions.elementToBeClickable(elem));
-			WebElement element = driver.findElement(By.id("btnCancel"));
+			WebElement element = driver.findElement(By.id("btnContinue"));
 			return element;
 		} catch (Exception e) {
 			driver.navigate().refresh();

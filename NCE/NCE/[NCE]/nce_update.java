@@ -143,6 +143,7 @@ public class nce_update {
 							                	if(currentStatus.trim().contains("Position Created in SP")) {
 							                		System.out.println("RECORD ["+id+"] - REQUEST ID ["+requestIdStr+"] >> " + currentStatus);
 							                		  error="[Error] Issue In Credentials/ Not PM in the Account";
+							                		  currentStatus = "[Error] Issue In Credentials/ Not PM in the Account";
 							                	}
 							                	
 							                	//CHECK IF STATUS AFTER MAIN METHOD | In Planning
@@ -401,35 +402,70 @@ public class nce_update {
 
 										DropDown.selectByIndex(0);
 										DropDown.selectByVisibleText(dataList.get(ctr+12));
+									} else if(ctr==13) {
+						            	System.out.println("Reason Position Needed");
+										Select DropDown = new Select(driver.findElement(By.id("REQD.P.WFM_REASON_POSITION_NEEDED")));
+
+										DropDown.selectByIndex(0);
+										DropDown.selectByVisibleText(dataList.get(ctr+12));
+									} else if(ctr==12) {
+						            	System.out.println("Bill Type");
+										Select DropDown = new Select(driver.findElement(By.id("REQD.P.WFM_BILL_TYPE")));
+
+										DropDown.selectByIndex(0);
+										DropDown.selectByVisibleText(dataList.get(ctr+12));
+									} else if(ctr==11) {
+						            	System.out.println("Resource Type");
+										Select DropDown = new Select(driver.findElement(By.id("REQD.P.WFM_RESOURCE_TYPE")));
+
+										DropDown.selectByIndex(0);
+										DropDown.selectByVisibleText(dataList.get(ctr+12));
+									} else if(ctr==30) {
+						            	System.out.println("Position Work Location");
+										Select DropDown = new Select(driver.findElement(By.id("REQD.P.WFM_LOC_ALIGN_TO_WPG")));
+
+										DropDown.selectByIndex(0);
+										DropDown.selectByVisibleText(dataList.get(ctr+12));
+									} else if(ctr==29) {
+						            	System.out.println("Location Conts Constrained");
+						            	if(dataList.get(ctr+12).toLowerCase().contains("yes")) {
+
+											 System.out.println("YESSSSSSSSSS");
+						            		WebElement element = driver.findElement(By.id("REQD.P.WFM_LOCTAION_CONTRACTUALLY_Y"));
+						            		((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", element);
+											 element.click();
+											 System.out.println(element.isSelected());
+											 System.out.println("YESSSSSSSSSS");
+											 if(!element.isSelected()) {
+												 element.click();
+											 }
+						            	}
+						            	if(dataList.get(ctr+12).toLowerCase().contains("no")) {
+						            		WebElement element = driver.findElement(By.id("REQD.P.WFM_LOCTAION_CONTRACTUALLY_N"));
+											 element.click();
+											 System.out.println(element.isSelected());
+											 if(!element.isSelected()) {
+												 element.click();
+											 }
+						            	}
+						            	
 									} else {
-							            if (ctr==13) {
-							            	System.out.println("Reason Position Needed");
-											Select DropDown = new Select(driver.findElement(By.id("REQD.P.WFM_REASON_POSITION_NEEDED")));
-
-											DropDown.selectByIndex(0);
-											DropDown.selectByVisibleText(dataList.get(ctr+12));
-										} else {
-											  By fieldPath = By.id(prop.getProperty(ctrStr));
-												wait.until(ExpectedConditions.presenceOfElementLocated(fieldPath));
-												wait.until(ExpectedConditions.elementToBeClickable(fieldPath));
-												WebElement field = wait.until(ExpectedConditions.presenceOfElementLocated(fieldPath));
-												field.clear();
-												
-												if (ctr==8) {
-													field.clear();
-												}
-
-												
-												Thread.sleep(200);
-												field.sendKeys(dataList.get(ctr+12).trim());
-												field.sendKeys(Keys.TAB);
+										By fieldPath = By.id(prop.getProperty(ctrStr));
+										wait.until(ExpectedConditions.presenceOfElementLocated(fieldPath));
+										wait.until(ExpectedConditions.elementToBeClickable(fieldPath));
+										WebElement field = wait.until(ExpectedConditions.presenceOfElementLocated(fieldPath));
+										field.clear();
+										
+										if (ctr==8) {
+											field.clear();
 										}
+
+										
+										Thread.sleep(200);
+										field.sendKeys(dataList.get(ctr+12).trim());
+										field.sendKeys(Keys.TAB);
 									}
 						            
-
-						            
-						          
-
 									alertHandler();	if (!error.isEmpty()) {
 										System.out.println("[ERROR]:"+error);
 										break;}
@@ -501,7 +537,7 @@ public class nce_update {
 				DesiredCapabilities capabilities;	    
 				capabilities = DesiredCapabilities.chrome();
 				ChromeOptions options = new ChromeOptions(); 
-						options.addArguments("--headless");	    	    
+//						options.addArguments("--headless");	    	    
 			    	    options.addArguments("--disable-extensions");   
 			    	    options.addArguments("--disable-gpu");   
 			    	    options.addArguments("--no-sandbox");   
