@@ -10,5 +10,7 @@ pause
 @echo off
 
 start cmd.exe /k "java -jar create.jar "1""
+
 start cmd.exe /k "java -jar create.jar "2""
+
 start cmd.exe /k "java -jar create.jar "3""

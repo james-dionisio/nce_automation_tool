@@ -10,7 +10,7 @@ pause
 @echo off
 
 
-start cmd.exe /k "java -jar update.jar "3""
-start cmd.exe /k "java -jar update.jar "2""
 start cmd.exe /k "java -jar update.jar "1""
+start cmd.exe /k "java -jar update.jar "2""
+start cmd.exe /k "java -jar update.jar "3""
 

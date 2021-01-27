@@ -13,4 +13,6 @@ start cmd.exe /k "java -jar delete.jar "1""
 
 start cmd.exe /k "java -jar delete.jar "2""
 
+start cmd.exe /k "java -jar delete.jar "3""
+
 

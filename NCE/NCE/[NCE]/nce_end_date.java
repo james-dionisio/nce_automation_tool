@@ -506,7 +506,7 @@ public class nce_end_date{
 				DesiredCapabilities capabilities;	    
 				capabilities = DesiredCapabilities.chrome();
 				ChromeOptions options = new ChromeOptions(); 
-						options.addArguments("--headless");			    	    
+//						options.addArguments("--headless");			    	    
 			    	    options.addArguments("--disable-extensions");   
 			    	    options.addArguments("--disable-gpu");   
 			    	    options.addArguments("--no-sandbox");   
@@ -867,13 +867,23 @@ public class nce_end_date{
 	
 	public static void statusElemWait() {
 		for (int x = 0; x < 20; x++) {
+			//*[@id="page-min-width-div"]/div[5]/div/table/tbody/tr[3]/td[1]
+			//*[@id="page-min-width-div"]/div[5]/div/table/tbody/tr[1]/td
 		try {
-			WebDriverWait wait = new WebDriverWait(driver, 60
-					);
+			WebDriverWait wait = new WebDriverWait(driver, 60);
 			wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[contains(@id,'requestStatus')]")));
 		} catch (Exception e) {
-			driver.navigate().refresh();
-			System.out.println("[WAITING] STATUS ELEMENT");
+
+			Boolean isPresent = driver.findElements(By.xpath("/*[@id=\"page-min-width-div\"]/div[5]/div/table/tbody/tr[1]/td")).size() > 0;
+			if(isPresent) {
+				System.out.println("Error Page Trying to Go Back");
+				driver.navigate().back();
+				System.out.println("[WAITING] Error Page Trying to Go Back");
+			} else {
+
+				driver.navigate().refresh();
+				System.out.println("[WAITING] STATUS ELEMENT");
+			}
 		}
 		}
 	}

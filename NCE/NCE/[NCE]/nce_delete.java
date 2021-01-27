@@ -89,16 +89,28 @@ public class nce_delete {
 				                	DateFormat Date = DateFormat.getDateInstance();
 				                	Calendar cals = Calendar.getInstance();
 				                	String currentDate = Date.format(cals.getTime());
+				                	currentStatus = statusWait(); 
+				        			if (currentStatus.trim().contains("Closed") || currentStatus.trim().contains("Cancelled")){
+				        				ongoingUpate();
+										update.executeUpdate();	
+										System.out.println("[PARALLEL "+ thread +"] " + requestIdStr + " processing successful.");
+										Thread.sleep(2000);
+								        search_menu().click();Thread.sleep(500);							        
+								        request_submenu().click();Thread.sleep(500);
+				        			}else {
+				        				//[MAIN]//
+					                	actions(commentStr, currentDate);
+					                	ongoingUpate();
+										update.executeUpdate();	
+										System.out.println("[PARALLEL "+ thread +"] " + requestIdStr + " processing successful.");
+										Thread.sleep(2000);
+								        search_menu().click();Thread.sleep(500);							        
+								        request_submenu().click();Thread.sleep(500);
+				        			}
 				                	
-				                	//[MAIN]//
-				                	actions(commentStr, currentDate);
 				                	
-				                    ongoingUpate();
-									update.executeUpdate();	
-									System.out.println("[PARALLEL "+ thread +"] " + requestIdStr + " processing successful.");
-									Thread.sleep(2000);
-							        search_menu().click();Thread.sleep(500);							        
-							        request_submenu().click();Thread.sleep(500);
+				                	
+				                    
 	   			                }
 	    	               break;
 	    	            } else {
