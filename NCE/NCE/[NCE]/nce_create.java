@@ -140,7 +140,7 @@ public class nce_create {
 						                		update.executeUpdate();
 						                	statusElemWait();currentStatus = statusWait();
 						                	//CHECK IF PENDING ADL APROVAL CLICK APPROVE BTN
-						                	  if (currentStatus.trim().contains("Pending ADL Approval")||currentStatus.trim().contains("Pending AE Approval")){
+						                	  if (currentStatus.trim().contains("Pending ADL Approval")){
 						                		  System.out.println("RECORD ["+id+"] - PROJECT ID ["+projIDStr+"] >>  APPROVAL RELEASED");
 						                		  System.out.println("RECORD ["+id+"] - PROJECT ID ["+projIDStr+"] >> " + currentStatus); 
 						                		  
@@ -150,6 +150,19 @@ public class nce_create {
 						                			  error="[Error] Approval Button Not Activated"; 
 						                		  }
 						                	  }
+						                	  
+						                	  statusElemWait();currentStatus = statusWait();
+							                	//CHECK IF PENDING AE APROVAL CLICK APPROVE BTN
+							                	  if (currentStatus.trim().contains("Pending AE Approval")){
+							                		  System.out.println("RECORD ["+id+"] - PROJECT ID ["+projIDStr+"] >>  APPROVAL RELEASED");
+							                		  System.out.println("RECORD ["+id+"] - PROJECT ID ["+projIDStr+"] >> " + currentStatus); 
+							                		  
+							                		  if(approveAEBtn()) {
+								                		  approveAE().click();
+							                		  } else {
+							                			  error="[Error] Approval AE Button Not Activated"; 
+							                		  }
+							                	  }
 						                	  statusElemWait();currentStatus = statusWait();
 							                  Thread.sleep(100);
 							                  
@@ -341,6 +354,26 @@ public class nce_create {
 		return false;
 	}
     
+    public static boolean approveAEBtn() {
+		for (int x = 0; x < 5; x++) {
+		try {
+			WebDriverWait wait = new WebDriverWait(driver, 5);
+			By elemPath = By.id("DB0_0");
+			WebElement elem = wait.until(ExpectedConditions.presenceOfElementLocated(elemPath));
+			System.out.println("Approval Button Activated: "+ elem.isDisplayed());
+			if (elem.isDisplayed()) {
+				return true;
+			}else{
+
+				error="Approval button not active";
+				return false;
+			}
+		} catch (Exception e) {
+		}
+		}
+		return false;
+	}
+    
     public static WebElement approveADL() {
 		for (int x = 0; x < 20; x++) {
 		try {
@@ -358,6 +391,24 @@ public class nce_create {
 		}
 		return null;
 	}
+    
+    public static WebElement approveAE() {
+  		for (int x = 0; x < 20; x++) {
+  		try {
+  			WebDriverWait wait = new WebDriverWait(driver, 10);
+  			By elemPath = By.xpath("//*[@id=\"DB0_0\"]");
+  			WebElement elem = wait.until(ExpectedConditions.presenceOfElementLocated(elemPath));
+  			wait.until(ExpectedConditions.elementToBeClickable(elem));
+  			WebElement element = driver.findElement(By.xpath("//*[@id=\"DB0_0\"]"));
+  			System.out.println("RECORD ["+id+"] - PROJECT ID ["+projIDStr+"] >> [Approved ADL]");
+  			return element;
+  		} catch (Exception e) {
+  			driver.navigate().refresh();
+  			System.out.println("[WAITING] Approval BUTTON");
+  		}
+  		}
+  		return null;
+  	}
     
     public static WebElement moveToSp() {
 		for (int x = 0; x < 20; x++) {
