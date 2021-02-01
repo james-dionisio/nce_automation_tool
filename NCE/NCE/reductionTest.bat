@@ -8,7 +8,7 @@ call taskkill /f /im IEDriverServer.exe
 pause 
 
 @echo off
-start cmd.exe /k "java -jar reduction.jar "3""
+start cmd.exe /k "java -jar reduction.jar "1""
 
 start cmd.exe /k "java -jar reduction.jar "2""
 
