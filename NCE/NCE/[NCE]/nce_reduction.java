@@ -93,7 +93,7 @@ public class nce_reduction {
 	            System.out.println("");
 	            System.out.println("[THREAD "+ thread +"]: PROCESSING...");
 	            System.out.println("TIME START: "+start);
-	            System.out.println("TOTAL 'Extension' DEMAND(S) ["+rowCount+"]");
+	            System.out.println("TOTAL 'Reduction' DEMAND(S) ["+rowCount+"]");
 	            if (rowCount==0) {driver.quit();System.exit(0);}
 	            for (int x = 0; x < rowCount; x++) {
 	    	        try {
@@ -277,7 +277,7 @@ public class nce_reduction {
         exit(0);
     }
    
-	
+
 	public static void populate_projectDetails(String reqIDVal, String fteDateVal, List<String> dataArryVal) throws Throwable {
 		for (int x = 0; x < 10; x++) {
 		try {
@@ -321,13 +321,14 @@ public class nce_reduction {
 
 						//Check FTE with value?
 						if (!fteDateVal.isEmpty()) {
-                       try {
-                       	System.out.println("RECORD ["+id+"] - REQUEST ID ["+requestIdStr+"] >> Deleting FTE RECORDS"); 
-							editFTE_deleteExisiting();
-						} catch (Throwable e) {
-							e.printStackTrace();
-						}
-
+							try {
+	                           	System.out.println("RECORD ["+id+"] - REQUEST ID ["+requestIdStr+"] >> Deleting FTE RECORDS"); 
+	                           	System.out.println("RECORD ["+id+"] - REQUEST ID ["+requestIdStr+"] >> im here"); 
+									editFTE_deleteExisiting();
+								} catch (Throwable e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
 						forecastEdit().click();
 						
 						StringTokenizer tokenizedData = new StringTokenizer(fteDateVal, ",");
@@ -349,7 +350,7 @@ public class nce_reduction {
 							wait.until(ExpectedConditions.elementToBeClickable(enddateElem)).click();
 			
 							
-							for (int dataCount = 0; dataCount < dataLine; dataCount++) {
+							for (int dataCount = 0; dataCount < dataLine; dataCount++) { 
 								array_dataLine[dataCount] = dataPerLine.nextToken();
 								if (!array_dataLine[dataCount].isEmpty()) {
 									By fieldPath = By.id("49025_COL_"+dataCount);
@@ -358,14 +359,15 @@ public class nce_reduction {
 									field.sendKeys(array_dataLine[dataCount]);
 									field.sendKeys(Keys.TAB);
 									alertHandler();
-									if (!error.isEmpty()) {break;}
+									if (!error.isEmpty()) {
+										System.out.println("[ERROR]:"+error);
+										break;}
 								}
 							}
 						 }
 					   }
-						
-						//Populate create fileds
-						for (int ctr = 1; ctr <= 33	; ctr++) {
+//						//Populate create fileds
+						for (int ctr = 1; ctr <= 29	; ctr++) {
 							 String ctrStr=Integer.toString(ctr);
 							
 						if (!dataList.get(ctr+12).isEmpty()) {
@@ -374,45 +376,51 @@ public class nce_reduction {
 						            prop.load(input);
 						            
 						            System.out.println(ctr+"|"+prop.getProperty(ctrStr)+"|"+dataList.get(ctr+12));
+									
 						            if (ctr==3) {
-										System.out.println("Country");
 										Select DropDown = new Select(driver.findElement(By.id("REQD.P.COUNTRY")));
 
 										DropDown.selectByIndex(0);
 										DropDown.selectByVisibleText(dataList.get(ctr+12));
+									} else {
+										if (ctr==13) {
+							            	System.out.println("Reason Position Needed");
+											Select DropDown = new Select(driver.findElement(By.id("REQD.P.WFM_REASON_POSITION_NEEDED")));
+
+											DropDown.selectByIndex(0);
+											DropDown.selectByVisibleText(dataList.get(ctr+12));
+										} else {
+											  By fieldPath = By.id(prop.getProperty(ctrStr));
+												wait.until(ExpectedConditions.presenceOfElementLocated(fieldPath));
+												wait.until(ExpectedConditions.elementToBeClickable(fieldPath));
+												WebElement field = wait.until(ExpectedConditions.presenceOfElementLocated(fieldPath));
+												field.clear();
+												
+												if (ctr==8) {
+													field.clear();
+												}
+
+												
+												Thread.sleep(200);
+												field.sendKeys(dataList.get(ctr+12).trim());
+												field.sendKeys(Keys.TAB);
+										}
 									}
-						            By fieldPath = By.id(prop.getProperty(ctrStr));
-									wait.until(ExpectedConditions.presenceOfElementLocated(fieldPath));
-									wait.until(ExpectedConditions.elementToBeClickable(fieldPath));
-									WebElement field = wait.until(ExpectedConditions.presenceOfElementLocated(fieldPath));
-									field.clear();
-									
-									Thread.sleep(100);
-									error();if (error()) {break;}
-									invalidataHandler();if (!error.isEmpty()) {break;}
+						            
+						          
+
+
 									alertHandler();	if (!error.isEmpty()) {break;}
-									
-									if (ctr==8) {
-										field.clear();
-									}
-									
-									Thread.sleep(200);
-									field.sendKeys(dataList.get(ctr+12).trim());
-									field.sendKeys(Keys.TAB);	
-									Thread.sleep(1000);
-									
 									invalidataHandler();if (!error.isEmpty()) {break;}
-									alertHandler();	if (!error.isEmpty()) {break;}
-									break;
-						        } catch (Exception e) {}    
+									
+						        } catch (Exception e) {}      
 						     }
-						   }			
-						
-				System.out.println("BREAK");
+						   }				
+	
 				break;
 					
-		}
-		    	}
+		}}
+			
 		} catch (Exception e) {
 		}
 		
@@ -458,7 +466,7 @@ public class nce_reduction {
 	    	WebElement password = driver.findElement(By.name("PASSWORD"));
 	    	WebElement loginBtn = driver.findElement(By.id("loginbtn"));
 	    	username.sendKeys("jdionisio4");
-	    	password.sendKeys("Jcsd(1206");
+	    	password.sendKeys("Jcsd!1206");
 	    	loginBtn.click();
 			break;
 		} catch (Exception e) {
