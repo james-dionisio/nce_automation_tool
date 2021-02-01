@@ -434,13 +434,10 @@ public class nce_update {
 									} else if(ctr==29) {
 						            	System.out.println("Location Conts Constrained");
 						            	if(dataList.get(ctr+12).toLowerCase().contains("yes")) {
-
-											 System.out.println("YESSSSSSSSSS");
 						            		WebElement element = driver.findElement(By.id("REQD.P.WFM_LOCTAION_CONTRACTUALLY_Y"));
 						            		((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", element);
 											 element.click();
 											 System.out.println(element.isSelected());
-											 System.out.println("YESSSSSSSSSS");
 											 if(!element.isSelected()) {
 												 element.click();
 											 }
