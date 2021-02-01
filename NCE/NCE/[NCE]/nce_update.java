@@ -125,7 +125,10 @@ public class nce_update {
 							                	currentStatus = statusWait();
 							                	System.out.println("REQUEST STATUS: "+currentStatus);
 							                	//MAIN METHOD
-							                	populate_projectDetails(requestIdStr, fteDateStr, dataList);
+							                	//MAIN METHOD IF STATUS IS IN PLANNING OR POSITION TO SP MOVE TO MAIN METHOD
+							                	if(currentStatus.trim().contains("In Planning") || currentStatus.trim().contains("Position Created in SP")) {
+							                		populate_projectDetails(requestIdStr, fteDateStr, dataList);
+							                	}
 							                	//STATUS WAIT
 							                	statusElemWait();currentStatus = statusWait();
 							                	Thread.sleep(100);
@@ -134,18 +137,20 @@ public class nce_update {
 							                		System.out.println("RECORD ["+id+"] - REQUEST ID ["+requestIdStr+"] >> " + currentStatus);
 							                		  error="[Error] Cancelled";
 							                	}
+							                	statusElemWait();currentStatus = statusWait();
 							                	//CHECK IF STATUS AFTER MAIN METHOD | CLOSED
 							                	if( currentStatus.trim().contains("Closed")) {
 							                		System.out.println("RECORD ["+id+"] - REQUEST ID ["+requestIdStr+"] >> " + currentStatus);
 							                		  error="[Error] Closed";
 							                	}
+							                	statusElemWait();currentStatus = statusWait();
 							                	//CHECK IF STATUS AFTER MAIN METHOD | Position Created in SP
 							                	if(currentStatus.trim().contains("Position Created in SP")) {
 							                		System.out.println("RECORD ["+id+"] - REQUEST ID ["+requestIdStr+"] >> " + currentStatus);
 							                		  error="[Error] Issue In Credentials/ Not PM in the Account";
 							                		  currentStatus = "[Error] Issue In Credentials/ Not PM in the Account";
 							                	}
-							                	
+							                	statusElemWait();currentStatus = statusWait();
 							                	//CHECK IF STATUS AFTER MAIN METHOD | In Planning
 							                	if(currentStatus.trim().contains("In Planning")) {
 							                		System.out.println("RECORD ["+id+"] - REQUEST ID ["+requestIdStr+"] >> " + currentStatus);

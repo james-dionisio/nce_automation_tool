@@ -126,8 +126,10 @@ public class nce_reduction {
 					                	      	//STATUS WAIT
 							                	currentStatus = statusWait();
 							                	System.out.println("REQUEST STATUS: "+currentStatus);
-							                	//MAIN METHOD
-							                	populate_projectDetails(requestIdStr, fteDateStr, dataList);
+							                	//MAIN METHOD IF STATUS IS IN PLANNING OR POSITION TO SP MOVE TO MAIN METHOD
+							                	if(currentStatus.trim().contains("In Planning") || currentStatus.trim().contains("Position Created in SP")) {
+							                		populate_projectDetails(requestIdStr, fteDateStr, dataList);
+							                	}
 							                	//STATUS WAIT
 							                	statusElemWait();currentStatus = statusWait();
 							                	Thread.sleep(100);
