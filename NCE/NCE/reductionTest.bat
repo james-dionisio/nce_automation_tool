@@ -13,4 +13,7 @@ start cmd.exe /k "java -jar reduction.jar "1""
 start cmd.exe /k "java -jar reduction.jar "2""
 
 
+start cmd.exe /k "java -jar reduction.jar "3""
+
+
 

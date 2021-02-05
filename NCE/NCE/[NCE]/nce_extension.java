@@ -127,8 +127,23 @@ public class nce_extension {
 					                	      	//STATUS WAIT
 							                	currentStatus = statusWait();
 							                	System.out.println("REQUEST STATUS: "+currentStatus);
+							                	if (currentStatus.trim().contains("Staffing Approved") || currentStatus.trim().contains("PLM Approved")) {
+							                		reworkOnPLM();
+													if (reworkOnPLM()) {
+														reworkPLM().click();	
+														System.out.println("RECORD ["+id+"] - REQUEST ID ["+requestIdStr+"] >> REWORK ON PLM");
+													}else {
+														System.out.println("RECORD ["+id+"] - REQUEST ID ["+requestIdStr+"] >> ISSUE ON CFREDENTIAL");
+														error="CREDENTIAL";break;
+													}
+													
+												}
 							                	//LATEST 12/8/2020 DMD PLANNER APPROVAL
 							                	//MAIN METHOD IF STATUS IS IN PLANNING OR POSITION TO SP MOVE TO MAIN METHOD
+							                	statusElemWait();
+					                	      	//STATUS WAIT
+							                	currentStatus = statusWait();
+							                	System.out.println("REQUEST STATUS: "+currentStatus);
 							                	if(currentStatus.trim().contains("In Planning") || currentStatus.trim().contains("Position Created in SP")) {
 							                		populate_projectDetails(requestIdStr, fteDateStr, dataList);
 							                	}
@@ -254,6 +269,22 @@ public class nce_extension {
 							                		  }
 							                	  }
 
+							                	  statusElemWait();currentStatus = statusWait();
+								                  Thread.sleep(100);
+							                	  //Check Move to SP then click Move to sp button
+							                	  if (currentStatus.trim().contains("PLM Approved")) {
+							                		  System.out.println("RECORD ["+id+"] - REQUEST ID ["+requestIdStr+"] >> " + currentStatus);
+							                		  moveToSp().click();
+							                	  }
+							                	  
+							                	  statusElemWait();currentStatus = statusWait();
+								                  Thread.sleep(100);
+							                	  //Check Move to SP then click Move to sp button
+							                	  if (currentStatus.trim().contains("PLM Approved")) {
+							                		  System.out.println("RECORD ["+id+"] - REQUEST ID ["+requestIdStr+"] >> " + currentStatus);
+							                		  moveToSp().click();
+							                	  }
+							                	  
 							                	  statusElemWait();currentStatus = statusWait();
 								                  Thread.sleep(100);
 							                	  //Check Move to SP then click Move to sp button
@@ -636,6 +667,38 @@ public class nce_extension {
 		for (int x = 0; x < 20; x++) {
 		try {
 			WebDriverWait wait = new WebDriverWait(driver, 5);
+			//Default Value for Primary Skill and Secondary skill
+			WebElement searchTextBoxPrimarySkill= driver.findElement(By.id("REQD.P.PRIMARY_SKILLAC_TF"));
+			WebElement searchTextBoxSecondarySkill= driver.findElement(By.id("REQD.P.SECONDARY_SKILLAC_TF"));
+			
+			// retrieving html attribute value using getAttribute() method
+			String typeValue=searchTextBoxPrimarySkill.getAttribute("value");
+			String typeValueSecondary=searchTextBoxSecondarySkill.getAttribute("value");
+			System.out.println("Value of type attribute: "+typeValue);
+			
+			if(typeValue.isEmpty())
+			{
+				System.out.println("Using Default Value for Primary Skill");
+				searchTextBoxPrimarySkill.sendKeys("ITIL - General");
+
+				searchTextBoxPrimarySkill.sendKeys(Keys.TAB);
+				
+				System.out.println("Using Default Value for Secondary Skill");
+				searchTextBoxSecondarySkill.sendKeys("Tools - General Delivery - Other");
+
+				searchTextBoxSecondarySkill.sendKeys(Keys.TAB);
+			}
+			
+			if(typeValueSecondary.isEmpty())
+			{
+				
+				System.out.println("Using Default Value for Secondary Skill");
+				searchTextBoxSecondarySkill.sendKeys("Tools - General Delivery - Other");
+
+				searchTextBoxSecondarySkill.sendKeys(Keys.TAB);
+			}
+			
+			//Click Complete PLM
 			By elemPath = By.xpath("//a//div[contains(text(), 'Complete PLM')]");
 			WebElement elem = wait.until(ExpectedConditions.presenceOfElementLocated(elemPath));
 			wait.until(ExpectedConditions.elementToBeClickable(elem));
@@ -979,12 +1042,46 @@ public class nce_extension {
 			}
 			return null;
 		}
+		
+		public static WebElement reworkPLM() {
+			for (int x = 0; x < 20; x++) {
+			try {
+				WebDriverWait wait = new WebDriverWait(driver, 10);
+				By elemPath = By.xpath("//*[@id=\"DB0_1\"]");
+				WebElement elem = wait.until(ExpectedConditions.presenceOfElementLocated(elemPath));
+				wait.until(ExpectedConditions.elementToBeClickable(elem));
+				WebElement element = driver.findElement(By.xpath("//*[@id=\"DB0_1\"]"));
+				return element;
+			} catch (Exception e) {
+				driver.navigate().refresh();
+				System.out.println("[WAITING] REWORK ON PLM BUTTON");
+			}
+			}
+			return null;
+		}
 	
 	public static boolean reDefineCheck() {
 		for (int x = 0; x < 2; x++) {
 		try {
 			WebDriverWait wait = new WebDriverWait(driver, 2);
 			By elemPath = By.xpath("//div[contains(text(), 'ReDefine Demand')]");
+			WebElement elem = wait.until(ExpectedConditions.presenceOfElementLocated(elemPath));
+			if (elem.isDisplayed()) {
+				return true;
+			}else{
+				return false;
+			}
+		} catch (Exception e) {
+		}
+		}
+		return false;
+	}
+	
+	public static boolean reworkOnPLM() {
+		for (int x = 0; x < 2; x++) {
+		try {
+			WebDriverWait wait = new WebDriverWait(driver, 2);
+			By elemPath = By.xpath("//*[@id=\"DB0_1\"]");
 			WebElement elem = wait.until(ExpectedConditions.presenceOfElementLocated(elemPath));
 			if (elem.isDisplayed()) {
 				return true;

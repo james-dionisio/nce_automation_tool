@@ -163,12 +163,12 @@ public class nce_end_date{
 													  releaseForAppvl().click();
 												  }
 							                	
-							                	//CHECK IF STATUS AFTER MAIN METHOD | Pending AE Approval
-												statusElemWait();currentStatus = statusWait();
-							                	if(currentStatus.trim().contains("Pending AE Approval")) {
-							                		System.out.println("RECORD ["+id+"] - REQUEST ID ["+requestIdStr+"] >> " + currentStatus);
-							                		approveADL().click();
-							                	}
+												//CHECK IF STATUS AFTER MAIN METHOD | Pending AE Approval
+													statusElemWait();currentStatus = statusWait();
+								                	if(currentStatus.trim().contains("Pending AE Approval")) {
+								                		System.out.println("RECORD ["+id+"] - REQUEST ID ["+requestIdStr+"] >> " + currentStatus);
+								                		approveAE().click();
+								                	}
 							                	
 							                	//CHECK IF STATUS AFTER MAIN METHOD | Pending ADL Approval
 							                	if(currentStatus.trim().contains("Pending ADL Approval")) {
@@ -735,6 +735,23 @@ public class nce_end_date{
 		return null;
 	}
 	
+	 public static WebElement approveAE() {
+	  		for (int x = 0; x < 20; x++) {
+	  		try {
+	  			WebDriverWait wait = new WebDriverWait(driver, 10);
+	  			By elemPath = By.xpath("//*[@id=\"DB0_0\"]");
+	  			WebElement elem = wait.until(ExpectedConditions.presenceOfElementLocated(elemPath));
+	  			wait.until(ExpectedConditions.elementToBeClickable(elem));
+	  			WebElement element = driver.findElement(By.xpath("//*[@id=\"DB0_0\"]"));
+	  			System.out.println("RECORD ["+id+"] - PROJECT ID ["+requestIdStr+"] >> [Approved ADL]");
+	  			return element;
+	  		} catch (Exception e) {
+	  			driver.navigate().refresh();
+	  			System.out.println("[WAITING] Approval BUTTON");
+	  		}
+	  		}
+	  		return null;
+	  	}
 	public static WebElement moveToSp() {
 		for (int x = 0; x < 20; x++) {
 		try {

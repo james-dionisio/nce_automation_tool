@@ -163,13 +163,15 @@ public class nce_reduction {
 												  }
 							                	
 							                	//CHECK IF STATUS AFTER MAIN METHOD | Pending AE Approval
+												//CHECK IF STATUS AFTER MAIN METHOD | Pending AE Approval
 												statusElemWait();currentStatus = statusWait();
 							                	if(currentStatus.trim().contains("Pending AE Approval")) {
 							                		System.out.println("RECORD ["+id+"] - REQUEST ID ["+requestIdStr+"] >> " + currentStatus);
-							                		approveADL().click();
+							                		approveAE().click();
 							                	}
 							                	
 							                	//CHECK IF STATUS AFTER MAIN METHOD | Pending ADL Approval
+								                statusElemWait();currentStatus = statusWait();
 							                	if(currentStatus.trim().contains("Pending ADL Approval")) {
 							                		System.out.println("RECORD ["+id+"] - REQUEST ID ["+requestIdStr+"] >> " + currentStatus);
 							                		 if(approveBtn()) {
@@ -178,6 +180,19 @@ public class nce_reduction {
 							                			  error="[Error] Approval Button Not Activated"; 
 							                		  }
 							                	}
+							                	
+							                	 statusElemWait();currentStatus = statusWait();
+								                  Thread.sleep(100);
+								                  
+								                  if (currentStatus.trim().contains("Pending Dmd Planner Approval")) {
+							                		  System.out.println("RECORD ["+id+"] - REQUEST ID ["+requestIdStr+"] >> " + currentStatus); 
+							                		  
+							                		  if(approveBtnDmdPlanner()) {
+							                			  approveADLDmdPlanner().click();
+							                		  } else {
+							                			  error="[Error] Approval Button Not Activated"; 
+							                		  }
+							                	  }
 							                	
 						                	
 						                	error();
@@ -204,11 +219,8 @@ public class nce_reduction {
 												  statusElemWait();currentStatus = statusWait();
 												  Thread.sleep(100);
 												  
-												  if (currentStatus.trim().contains("Position Created in SP")) {
-													  error="[Error] Issue on credential"; 
-												  } 
 						                		  //CHECK IF PENDING ADL APROVAL
-							                	  if (currentStatus.trim().contains("Pending ADL Approval")||currentStatus.trim().contains("Pending AE Approval")){
+							                	  if (currentStatus.trim().contains("Pending ADL Approval")){
 							                		  System.out.println("RECORD ["+id+"] - REQUEST ID ["+requestIdStr+"] >>  APPROVAL RELEASED");
 							                		  System.out.println("RECORD ["+id+"] - REQUEST ID ["+requestIdStr+"] >> " + currentStatus);
 							                		  if(approveBtn()) {
@@ -218,12 +230,25 @@ public class nce_reduction {
 							                		  }
 							                	  }
 							                	  statusElemWait();currentStatus = statusWait();
+								                	if(currentStatus.trim().contains("Pending AE Approval")) {
+								                		System.out.println("RECORD ["+id+"] - REQUEST ID ["+requestIdStr+"] >> " + currentStatus);
+								                		approveAE().click();
+								                	}
+							                	  statusElemWait();currentStatus = statusWait();
 								                  Thread.sleep(100);
 								                  
-							                	  if (currentStatus.trim().contains("Pending Dmd Planner Approval")) {
+								                  if (currentStatus.trim().contains("Pending Dmd Planner Approval")) {
 							                		  System.out.println("RECORD ["+id+"] - REQUEST ID ["+requestIdStr+"] >> " + currentStatus); 
-							                		  error="";
+							                		  
+							                		  if(approveBtnDmdPlanner()) {
+							                			  approveADLDmdPlanner().click();
+							                		  } else {
+							                			  error="[Error] Approval Button Not Activated"; 
+							                		  }
 							                	  }
+								                  
+								                  statusElemWait();currentStatus = statusWait();
+								                  Thread.sleep(100);
 							                	  //Check Move to SP then click Move to sp button
 							                	  if (currentStatus.trim().contains("PLM Approved")) {
 							                		  System.out.println("RECORD ["+id+"] - REQUEST ID ["+requestIdStr+"] >> " + currentStatus);
@@ -231,11 +256,8 @@ public class nce_reduction {
 							                	  }
 							                	  
 							                	  statusElemWait();currentStatus = statusWait();
-								                  Thread.sleep(100);
-								                  
-								                  if (currentStatus.trim().contains("Position Created in SP")) {
-													  error="[Error] Issue on credential"; 
-												  }
+								                  Thread.sleep(100);							                
+
 					                	  }
 				                	} else {
 				                		//CHECK IF I HAVE ACCES TO THE ACCOUNT
@@ -319,54 +341,52 @@ public class nce_reduction {
 				statusElemWait();currentStatus = statusWait(); 
 		    	if (currentStatus.trim().contains("In Planning")){
 
-						//Check FTE with value?
-						if (!fteDateVal.isEmpty()) {
-							try {
-	                           	System.out.println("RECORD ["+id+"] - REQUEST ID ["+requestIdStr+"] >> Deleting FTE RECORDS"); 
-	                           	System.out.println("RECORD ["+id+"] - REQUEST ID ["+requestIdStr+"] >> im here"); 
-									editFTE_deleteExisiting();
-								} catch (Throwable e) {
-									// TODO Auto-generated catch block
-									e.printStackTrace();
-								}
-						forecastEdit().click();
-						
-						StringTokenizer tokenizedData = new StringTokenizer(fteDateVal, ",");
-						int forecastLine = tokenizedData.countTokens(); 
-						String array_dataForecast[] = new String[forecastLine];
-						
-						for (int line = 0; line < forecastLine; line++) {
-							array_dataForecast[line] = tokenizedData.nextToken(); 
-							String ftevalues = array_dataForecast[line];
-							StringTokenizer dataPerLine = new StringTokenizer(ftevalues, "#");
-							int dataLine = dataPerLine.countTokens();
-							String array_dataLine[] = new String[dataLine];
-							
-							By addButton = By.id("BT_ADD_ROW_P_1");
-							WebElement fteaddPath = wait.until(ExpectedConditions.presenceOfElementLocated(addButton));
-							wait.until(ExpectedConditions.elementToBeClickable(fteaddPath)).click();
-							By enddateCol = By.xpath("//span[contains(text(), 'FTE End Date')]");
-							WebElement enddateElem = wait.until(ExpectedConditions.presenceOfElementLocated(enddateCol));
-							wait.until(ExpectedConditions.elementToBeClickable(enddateElem)).click();
-			
-							
-							for (int dataCount = 0; dataCount < dataLine; dataCount++) { 
-								array_dataLine[dataCount] = dataPerLine.nextToken();
-								if (!array_dataLine[dataCount].isEmpty()) {
-									By fieldPath = By.id("49025_COL_"+dataCount);
-									WebElement field = wait.until(ExpectedConditions.presenceOfElementLocated(fieldPath));
-									wait.until(ExpectedConditions.elementToBeClickable(field)).clear();
-									field.sendKeys(array_dataLine[dataCount]);
-									field.sendKeys(Keys.TAB);
-									alertHandler();
-									if (!error.isEmpty()) {
-										System.out.println("[ERROR]:"+error);
-										break;}
-								}
+					if (!fteDateVal.isEmpty()) {
+						try {
+                           	System.out.println("RECORD ["+id+"] - REQUEST ID ["+requestIdStr+"] >> Deleting FTE RECORDS"); 
+								editFTE_deleteExisiting();
+							} catch (Throwable e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
 							}
-						 }
-					   }
-//						//Populate create fileds
+					forecastEdit().click();
+					
+					StringTokenizer tokenizedData = new StringTokenizer(fteDateVal, ",");
+					int forecastLine = tokenizedData.countTokens(); 
+					String array_dataForecast[] = new String[forecastLine];
+					
+					for (int line = 0; line < forecastLine; line++) {
+						array_dataForecast[line] = tokenizedData.nextToken(); 
+						String ftevalues = array_dataForecast[line];
+						StringTokenizer dataPerLine = new StringTokenizer(ftevalues, "#");
+						int dataLine = dataPerLine.countTokens();
+						String array_dataLine[] = new String[dataLine];
+						
+						By addButton = By.id("BT_ADD_ROW_P_1");
+						WebElement fteaddPath = wait.until(ExpectedConditions.presenceOfElementLocated(addButton));
+						wait.until(ExpectedConditions.elementToBeClickable(fteaddPath)).click();
+						By enddateCol = By.xpath("//span[contains(text(), 'FTE End Date')]");
+						WebElement enddateElem = wait.until(ExpectedConditions.presenceOfElementLocated(enddateCol));
+						wait.until(ExpectedConditions.elementToBeClickable(enddateElem)).click();
+		
+						
+						for (int dataCount = 0; dataCount < dataLine; dataCount++) { 
+							array_dataLine[dataCount] = dataPerLine.nextToken();
+							if (!array_dataLine[dataCount].isEmpty()) {
+								By fieldPath = By.id("49025_COL_"+dataCount);
+								WebElement field = wait.until(ExpectedConditions.presenceOfElementLocated(fieldPath));
+								wait.until(ExpectedConditions.elementToBeClickable(field)).clear();
+								field.sendKeys(array_dataLine[dataCount]);
+								field.sendKeys(Keys.TAB);
+								alertHandler();
+								if (!error.isEmpty()) {
+									System.out.println("[ERROR]:"+error);
+									break;}
+							}
+						}
+					 }
+				   }
+////						//Populate create fileds
 						for (int ctr = 1; ctr <= 29	; ctr++) {
 							 String ctrStr=Integer.toString(ctr);
 							
@@ -416,7 +436,6 @@ public class nce_reduction {
 						        } catch (Exception e) {}      
 						     }
 						   }				
-	
 				break;
 					
 		}}
@@ -426,6 +445,45 @@ public class nce_reduction {
 		
 	  }
 		
+	}
+	
+	public static boolean approveBtnDmdPlanner() {
+		for (int x = 0; x < 20; x++) {
+		try {
+			Thread.sleep(100);
+			WebDriverWait wait = new WebDriverWait(driver, 5);
+			By elemPath = By.id("DB0_0");
+			WebElement elem = wait.until(ExpectedConditions.presenceOfElementLocated(elemPath));
+			System.out.println("Approval Button Activated: "+ elem.isDisplayed());
+			if (elem.isDisplayed()) {
+				return true;
+			}else{
+
+				error="Approval button not active";
+				return false;
+			}
+		} catch (Exception e) {
+		}
+		}
+		return false;
+	}
+	
+	public static WebElement approveADLDmdPlanner() {
+		for (int x = 0; x < 20; x++) {
+		try {
+			WebDriverWait wait = new WebDriverWait(driver, 10);
+			By elemPath = By.xpath("//*[@id=\"DB0_0\"]");
+			WebElement elem = wait.until(ExpectedConditions.presenceOfElementLocated(elemPath));
+			wait.until(ExpectedConditions.elementToBeClickable(elem));
+			WebElement element = driver.findElement(By.xpath("//*[@id=\"DB0_0\"]"));
+			System.out.println("RECORD ["+id+"] - PROJECT ID ["+requestIdStr+"] >> [Approved DMD PLANNER]");
+			return element;
+		} catch (Exception e) {
+			driver.navigate().refresh();
+			System.out.println("[WAITING] Approval BUTTON");
+		}
+		}
+		return null;
 	}
 
 	//STEP 1
@@ -640,6 +698,24 @@ public class nce_reduction {
 		}
 		return null;
 	}
+	
+	 public static WebElement approveAE() {
+	  		for (int x = 0; x < 20; x++) {
+	  		try {
+	  			WebDriverWait wait = new WebDriverWait(driver, 10);
+	  			By elemPath = By.xpath("//*[@id=\"DB0_0\"]");
+	  			WebElement elem = wait.until(ExpectedConditions.presenceOfElementLocated(elemPath));
+	  			wait.until(ExpectedConditions.elementToBeClickable(elem));
+	  			WebElement element = driver.findElement(By.xpath("//*[@id=\"DB0_0\"]"));
+	  			System.out.println("RECORD ["+id+"] - PROJECT ID ["+requestIdStr+"] >> [Approved ADL]");
+	  			return element;
+	  		} catch (Exception e) {
+	  			driver.navigate().refresh();
+	  			System.out.println("[WAITING] Approval BUTTON");
+	  		}
+	  		}
+	  		return null;
+	  	}
 	
 	public static WebElement moveToSp() {
 		for (int x = 0; x < 20; x++) {
