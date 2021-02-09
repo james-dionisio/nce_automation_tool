@@ -511,7 +511,7 @@ public class nce_create {
 							field.sendKeys(dataList.get(ctr+12).trim());
 
 							field.sendKeys(Keys.TAB);
-						//ALERT POP UP MESSAGE
+						//ALERT POP UP MESSAGE Apply Changes
 						alertHandler();
 						if (!error.isEmpty()) {
 							System.out.println("[ERROR]:"+error);
