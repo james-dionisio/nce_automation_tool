@@ -534,10 +534,10 @@ public class nce_extension {
 		for (int x = 0; x < 20; x++) {
 		try {
 			WebDriverWait wait = new WebDriverWait(driver, 30);
-			wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[contains(@name,'USER')]")));
-			WebElement username = driver.findElement(By.name("USER"));
-	    	WebElement password = driver.findElement(By.name("PASSWORD"));
-	    	WebElement loginBtn = driver.findElement(By.id("loginbtn"));
+			wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[contains(@name,'username')]")));
+            WebElement username = driver.findElement(By.name("username"));
+            WebElement password = driver.findElement(By.name("password"));
+            WebElement loginBtn = driver.findElement(By.id("okta-signin-submit"));
 	    	username.sendKeys("jdionisio4");
 	    	password.sendKeys("Jcsd!1206");
 	    	loginBtn.click();
