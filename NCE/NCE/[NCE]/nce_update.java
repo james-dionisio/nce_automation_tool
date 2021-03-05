@@ -120,7 +120,21 @@ public class nce_update {
 						                	for (int count=1; count <= 43;count++) {
 						                		dataList.add(rs.getString(count));
 						                	}
-						                	
+						                	statusElemWait();
+				                	      	//STATUS WAIT
+							                	currentStatus = statusWait();
+							                	System.out.println("REQUEST STATUS: "+currentStatus);
+							                	if (currentStatus.trim().contains("Staffing Approved") || currentStatus.trim().contains("PLM Approved")) {
+							                		reworkOnPLM();
+													if (reworkOnPLM()) {
+														reworkPLM().click();	
+														System.out.println("RECORD ["+id+"] - REQUEST ID ["+requestIdStr+"] >> REWORK ON PLM");
+													}else {
+														System.out.println("RECORD ["+id+"] - REQUEST ID ["+requestIdStr+"] >> ISSUE ON CFREDENTIAL");
+														error="CREDENTIAL";break;
+													}
+													
+												}
 					                	      	statusElemWait();
 					                	      	//STATUS WAIT
 							                	currentStatus = statusWait();
