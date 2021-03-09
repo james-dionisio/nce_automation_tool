@@ -224,53 +224,106 @@ public class nce_update {
 													  error="DONE"; 
 												  } 
 						                		  //CHECK IF PENDING ADL APROVAL
-							                	  if (currentStatus.trim().contains("Pending ADL Approval")||currentStatus.trim().contains("Pending AE Approval")){
-							                		  System.out.println("RECORD ["+id+"] - REQUEST ID ["+requestIdStr+"] >>  APPROVAL RELEASED");
+												  do {currentStatus = statusWait();
+								                	System.out.println("RECORD ["+id+"] - REQUEST ID ["+requestIdStr+"] >>  APPROVAL RELEASED");
 							                		  System.out.println("RECORD ["+id+"] - REQUEST ID ["+requestIdStr+"] >> " + currentStatus);
-							                		  if(approveBtn()) {
+							                		  if(approveBtn() && currentStatus.trim().contains("Pending ADL Approval")||currentStatus.trim().contains("Pending AE Approval")) {
 								                		  approveADL().click();
 							                		  } else {
 							                			  error="[Error] Approval Button Not Activated"; 
 							                		  }
-							                	  }
-							                	  statusElemWait();currentStatus = statusWait();
-								                  Thread.sleep(100);
-								             
-							                	  if (currentStatus.trim().contains("Pending Dmd Planner Approval")) {
-							                		  System.out.println("RECORD ["+id+"] - REQUEST ID ["+requestIdStr+"] >> " + currentStatus); 
-							                		  
-							                		  if(approveBtnDmdPlanner()) {
+								                	} while (currentStatus.trim().contains("Pending ADL Approval")||currentStatus.trim().contains("Pending AE Approval"));
+								                	
+//							                	  if (currentStatus.trim().contains("Pending ADL Approval")){
+//							                		  System.out.println("RECORD ["+id+"] - REQUEST ID ["+requestIdStr+"] >>  APPROVAL RELEASED");
+//							                		  System.out.println("RECORD ["+id+"] - REQUEST ID ["+requestIdStr+"] >> " + currentStatus);
+//							                		  if(approveBtn()) {
+//								                		  approveADL().click();
+//							                		  } else {
+//							                			  error="[Error] Approval Button Not Activated"; 
+//							                		  }
+//							                	  }
+							                	  
+							                	 						                  
+								                	do {currentStatus = statusWait();
+							                		  System.out.println("RECORD ["+id+"] - REQUEST ID ["+requestIdStr+"] >> " + currentStatus);
+							                		  if(approveBtnDmdPlanner() && currentStatus.trim().contains("Pending Dmd Planner Approval")) {
 							                			  approveADLDmdPlanner().click();
 							                		  } else {
 							                			  error="[Error] Approval Button Not Activated"; 
 							                		  }
-							                	  }
-							                	  statusElemWait();currentStatus = statusWait();
-								                  Thread.sleep(100);
-							                	  //Check Move to SP then click Move to sp button
-							                	  if (currentStatus.trim().contains("PLM Approved")) {
+								                	} while (currentStatus.trim().contains("Pending Dmd Planner Approval"));
+								                	
+//							                	  if (currentStatus.trim().contains("Pending Dmd Planner Approval")) {
+//							                		  System.out.println("RECORD ["+id+"] - REQUEST ID ["+requestIdStr+"] >> " + currentStatus); 
+//							                		  
+//							                		  if(approveBtnDmdPlanner()) {
+//							                			  approveADLDmdPlanner().click();
+//							                		  } else {
+//							                			  error="[Error] Approval Button Not Activated"; 
+//							                		  }
+//							                	  }
+
+								                	do {currentStatus = statusWait();
 							                		  System.out.println("RECORD ["+id+"] - REQUEST ID ["+requestIdStr+"] >> " + currentStatus);
-							                		  moveToSp().click();
-							                	  }
+							                		  if(currentStatus.trim().contains("PLM Approved")) {
+							                			  moveToSp().click();
+							                		  } else {
+							                			  error="[Error] Approval Button Not Activated"; 
+							                		  }
+								                	} while (currentStatus.trim().contains("PLM Approved"));
+								                	
+//							                	  statusElemWait();currentStatus = statusWait();
+//								                  Thread.sleep(100);
+//							                	  //Check Move to SP then click Move to sp button
+//							                	  if (currentStatus.trim().contains("PLM Approved")) {
+//							                		  System.out.println("RECORD ["+id+"] - REQUEST ID ["+requestIdStr+"] >> " + currentStatus);
+//							                		  moveToSp().click();
+//							                	  }
+//							                	  
+//							                	  statusElemWait();currentStatus = statusWait();
+//								                  Thread.sleep(100);
+//							                	  //Check Move to SP then click Move to sp button
+//							                	  if (currentStatus.trim().contains("PLM Approved")) {
+//							                		  System.out.println("RECORD ["+id+"] - REQUEST ID ["+requestIdStr+"] >> " + currentStatus);
+//							                		  moveToSp().click();
+//							                	  }
 							                	  
-							                	  statusElemWait();currentStatus = statusWait();
-								                  Thread.sleep(100);
-							                	  //Check Move to SP then click Move to sp button
-							                	  if (currentStatus.trim().contains("PLM Approved")) {
+//							                	  statusElemWait();currentStatus = statusWait();
+//								                  Thread.sleep(100);
+//							                	  //Check Move to SP then click Move to sp button
+//							                	  if (currentStatus.trim().contains("PLM Approved")) {
+//							                		  System.out.println("RECORD ["+id+"] - REQUEST ID ["+requestIdStr+"] >> " + currentStatus);
+//							                		  moveToSp().click();
+//							                	  }
+//							                	  
+//							                	  statusElemWait();currentStatus = statusWait();
+//								                  Thread.sleep(100);
+//							                	  //Check Move to SP then click Move to sp button
+//							                	  if (currentStatus.trim().contains("PLM Approved")) {
+//							                		  System.out.println("RECORD ["+id+"] - REQUEST ID ["+requestIdStr+"] >> " + currentStatus);
+//							                		  moveToSp().click();
+//							                	  }
+//							                	  
+								                	do {currentStatus = statusWait();
 							                		  System.out.println("RECORD ["+id+"] - REQUEST ID ["+requestIdStr+"] >> " + currentStatus);
-							                		  moveToSp().click();
-							                	  }
-							                	  
-							                	  statusElemWait();currentStatus = statusWait();
-								                  Thread.sleep(100);
-							                	  //Check Move to SP then click Move to sp button
-							                	  if (currentStatus.trim().contains("Staffing Approved")) {
-							                		  System.out.println("RECORD ["+id+"] - REQUEST ID ["+requestIdStr+"] >> " + currentStatus);
-							                		  moveToSp().click();
-							                	  }
-							                	  
-							                	  statusElemWait();currentStatus = statusWait();
-								                  Thread.sleep(100);
+							                		  if(currentStatus.trim().contains("Staffing Approved")) {
+							                			  moveToSp().click();
+							                		  } else {
+							                			  error="[Error] Approval Button Not Activated"; 
+							                		  }
+								                	} while (currentStatus.trim().contains("Staffing Approved"));
+								                	
+//								                	statusElemWait();currentStatus = statusWait();
+//								                  Thread.sleep(100);
+//							                	  //Check Move to SP then click Move to sp button
+//							                	  if (currentStatus.trim().contains("Staffing Approved")) {
+//							                		  System.out.println("RECORD ["+id+"] - REQUEST ID ["+requestIdStr+"] >> " + currentStatus);
+//							                		  moveToSp().click();
+//							                	  }
+//							                	  
+//							                	  statusElemWait();currentStatus = statusWait();
+//								                  Thread.sleep(100);
 								                  
 								                  if (currentStatus.trim().contains("Position Created in SP")) {
 													  error="DONE"; 
@@ -281,6 +334,7 @@ public class nce_update {
 				                		System.out.println("Access Error: "+accessError());
 				                		error="[Error] Access Error";
 				                	}
+
 				                	  
 				                	  ongoingUpate();
 				                	  update.executeUpdate();	
@@ -1003,11 +1057,46 @@ public class nce_update {
 			return null;
 		}
 	
+		public static WebElement reworkPLM() {
+			for (int x = 0; x < 20; x++) {
+			try {
+				WebDriverWait wait = new WebDriverWait(driver, 10);
+				By elemPath = By.xpath("//*[@id=\"DB0_1\"]");
+				WebElement elem = wait.until(ExpectedConditions.presenceOfElementLocated(elemPath));
+				wait.until(ExpectedConditions.elementToBeClickable(elem));
+				WebElement element = driver.findElement(By.xpath("//*[@id=\"DB0_1\"]"));
+				return element;
+			} catch (Exception e) {
+				driver.navigate().refresh();
+				System.out.println("[WAITING] REWORK ON PLM BUTTON");
+			}
+			}
+			return null;
+		}
+		
+		
 	public static boolean reDefineCheck() {
 		for (int x = 0; x < 2; x++) {
 		try {
 			WebDriverWait wait = new WebDriverWait(driver, 2);
 			By elemPath = By.xpath("//div[contains(text(), 'ReDefine Demand')]");
+			WebElement elem = wait.until(ExpectedConditions.presenceOfElementLocated(elemPath));
+			if (elem.isDisplayed()) {
+				return true;
+			}else{
+				return false;
+			}
+		} catch (Exception e) {
+		}
+		}
+		return false;
+	}
+	
+	public static boolean reworkOnPLM() {
+		for (int x = 0; x < 2; x++) {
+		try {
+			WebDriverWait wait = new WebDriverWait(driver, 2);
+			By elemPath = By.xpath("//*[@id=\"DB0_1\"]");
 			WebElement elem = wait.until(ExpectedConditions.presenceOfElementLocated(elemPath));
 			if (elem.isDisplayed()) {
 				return true;
