@@ -576,7 +576,7 @@ public class nce_extension {
 			endRec = Instant.now();timeElapsedRec = Duration.between(startRec, endRec);
 			 if (!error.isEmpty()) {
 				 update.setString(1, error);
-				 update.setString(3, error.toString());
+				 update.setString(3, error.replaceAll("\\s",""));
 				}else {
 				update.setString(1, "DONE");
 				update.setString(3, currentStatus);
