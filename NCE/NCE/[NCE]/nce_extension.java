@@ -199,6 +199,19 @@ public class nce_extension {
 														  error="[Error]" + HeaderTxt;
 													  }
 												  }
+												  
+												  statusElemWait();currentStatus = statusWait();
+												  if(currentStatus.trim().contains("Ready for Approval")) {
+													  System.out.println("RECORD ["+id+"] - REQUEST ID ["+requestIdStr+"] >> " + currentStatus);
+													  String HeaderTxt = driver.findElement(By.xpath("//*[@id=\"DRIVEN_CH_41\"]")).getText();
+													  System.out.println("No Release for Approval Error: "+HeaderTxt.isEmpty());
+													  if(HeaderTxt.isEmpty()) {
+															releaseForAppvl().click();
+													  } else {
+														  releaseForAppvl().click();
+														  error="[Error]" + HeaderTxt;
+													  }
+												  }
 
 						                		  //STATUS: PENDING ADL APPROVAL 
 												  statusElemWait();currentStatus = statusWait();
@@ -576,7 +589,7 @@ public class nce_extension {
 			endRec = Instant.now();timeElapsedRec = Duration.between(startRec, endRec);
 			 if (!error.isEmpty()) {
 				 update.setString(1, error);
-				 update.setString(3, error.toString());
+				 update.setString(3, error.replaceAll("\\s",""));
 				}else {
 				update.setString(1, "DONE");
 				update.setString(3, currentStatus);

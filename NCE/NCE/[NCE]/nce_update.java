@@ -530,11 +530,22 @@ public class nce_update {
 										if (ctr==8) {
 											field.clear();
 										}
+										
+										if(ctr==18 || ctr==19) {
+											Thread.sleep(200);
+											field.clear();
+											field.sendKeys(dataList.get(ctr+12).trim());
+											field.clear();
+											field.sendKeys(dataList.get(ctr+12).trim());
+											field.sendKeys(Keys.TAB);
+										} else {
+											Thread.sleep(200);
+											field.sendKeys(dataList.get(ctr+12).trim());
+											field.sendKeys(Keys.TAB);
+										}
 
 										
-										Thread.sleep(200);
-										field.sendKeys(dataList.get(ctr+12).trim());
-										field.sendKeys(Keys.TAB);
+										
 									}
 						            
 									alertHandler();	if (!error.isEmpty()) {
@@ -817,15 +828,26 @@ public class nce_update {
 		for (int x = 0; x < 20; x++) {
 		try {
 			WebDriverWait wait = new WebDriverWait(driver, 10);
-			By elemPath = By.xpath("//*[@id=\"DB0_0\"]");
-			WebElement elem = wait.until(ExpectedConditions.presenceOfElementLocated(elemPath));
-			wait.until(ExpectedConditions.elementToBeClickable(elem));
-			WebElement element = driver.findElement(By.xpath("//*[@id=\"DB0_0\"]"));
-			System.out.println("RECORD ["+id+"] - PROJECT ID ["+requestIdStr+"] >> [Move to SP]");
-			return element;
+			//a//div[contains(text(), 'Cancel')]
+			//*[@id="DB0_0"]/div[contains(text(), 'Cancel')]
+
+			String HeaderTxt = driver.findElement(By.xpath("//*[@id=\"DB0_0\"]")).getText();
+			System.out.println("Cancel Appear: "+HeaderTxt);
+			if(HeaderTxt != "Cancel") {
+				By elemPath = By.xpath("//*[@id=\"DB0_0\"]");
+				WebElement elem = wait.until(ExpectedConditions.presenceOfElementLocated(elemPath));
+				wait.until(ExpectedConditions.elementToBeClickable(elem));
+				WebElement element = driver.findElement(By.xpath("//*[@id=\"DB0_0\"]"));
+				System.out.println("RECORD ["+id+"] - PROJECT ID ["+requestIdStr+"] >> [Move to SP]");
+				return element;
+			}else {
+				driver.navigate().refresh();
+				return
+			}
+			
 		} catch (Exception e) {
 			driver.navigate().refresh();
-			System.out.println("[WAITING] Move yo SP BUTTON");
+			System.out.println("[WAITING] Move to SP BUTTON");
 		}
 		}
 		return null;
