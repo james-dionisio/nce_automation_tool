@@ -178,7 +178,7 @@ public class nce_extension {
 												System.out.println("RECORD ["+id+"] - PROJECT ID ["+requestIdStr+"] >> SKIPPED");
 						                	}else {
 												  statusElemWait();currentStatus = statusWait();
-												  Thread.sleep(100);
+												  Thread.sleep(500);
 												  
 												  //CHECK IF IN PLANNING
 												  if (currentStatus.trim().contains("In Planning")){
@@ -188,6 +188,7 @@ public class nce_extension {
 												  
 												  //STATUS: READY FOR APPROVAL (With Data issue encountered)
 												  statusElemWait();currentStatus = statusWait();
+												  Thread.sleep(500);
 												  if(currentStatus.trim().contains("Ready for Approval")) {
 													  System.out.println("RECORD ["+id+"] - REQUEST ID ["+requestIdStr+"] >> " + currentStatus);
 													  String HeaderTxt = driver.findElement(By.xpath("//*[@id=\"DRIVEN_CH_41\"]")).getText();
@@ -201,6 +202,7 @@ public class nce_extension {
 												  }
 												  
 												  statusElemWait();currentStatus = statusWait();
+												  Thread.sleep(500);
 												  if(currentStatus.trim().contains("Ready for Approval")) {
 													  System.out.println("RECORD ["+id+"] - REQUEST ID ["+requestIdStr+"] >> " + currentStatus);
 													  String HeaderTxt = driver.findElement(By.xpath("//*[@id=\"DRIVEN_CH_41\"]")).getText();
@@ -215,6 +217,7 @@ public class nce_extension {
 
 						                		  //STATUS: PENDING ADL APPROVAL 
 												  statusElemWait();currentStatus = statusWait();
+												  Thread.sleep(500);
 												  if(currentStatus.trim().contains("Pending ADL Approval")) {
 													  System.out.println("RECORD ["+id+"] - REQUEST ID ["+requestIdStr+"] >>  APPROVAL RELEASED");
 							                		  System.out.println("RECORD ["+id+"] - REQUEST ID ["+requestIdStr+"] >> " + currentStatus);
@@ -227,6 +230,7 @@ public class nce_extension {
 												  }
 								                	// STATUS: PENDING AE APPROVAL
 							                	  statusElemWait();currentStatus = statusWait();
+							                	  Thread.sleep(500);
 							                	  if(currentStatus.trim().contains("Pending AE Approval")) {
 							                		  System.out.println("RECORD ["+id+"] - REQUEST ID ["+requestIdStr+"] >>  APPROVAL RELEASED");
 							                		  System.out.println("RECORD ["+id+"] - REQUEST ID ["+requestIdStr+"] >> " + currentStatus);
@@ -240,6 +244,7 @@ public class nce_extension {
 								                	
 								                	//STATUS: PENDING DEMAND APPROVAL
 							                	  statusElemWait();currentStatus = statusWait();
+							                	  Thread.sleep(500);
 							                	  if(currentStatus.trim().contains("Pending Dmd Planner Approval")) {
 							                		  System.out.println("RECORD ["+id+"] - REQUEST ID ["+requestIdStr+"] >> " + currentStatus);
 							                		  if(approveBtnDmdPlanner() && currentStatus.trim().contains("Pending Dmd Planner Approval")) {
@@ -251,6 +256,7 @@ public class nce_extension {
 							                	  }
 								                	//STATUS: PLM APPROVAL
 							                	  statusElemWait();currentStatus = statusWait();
+							                	  Thread.sleep(500);
 							                	  if(currentStatus.trim().contains("PLM Approved")) {
 							                		  System.out.println("RECORD ["+id+"] - REQUEST ID ["+requestIdStr+"] >> " + currentStatus);
 							                		  String HeaderTxt = driver.findElement(By.xpath("//*[@id=\"DRIVEN_CH_41\"]")).getText();
@@ -264,6 +270,7 @@ public class nce_extension {
 							                	  }
 								                	//STATUS: STAFFING APPROVAL
 							                	  statusElemWait();currentStatus = statusWait();
+							                	  Thread.sleep(500);
 							                	  if(currentStatus.trim().contains("Staffing Approved")) {
 							                		  System.out.println("RECORD ["+id+"] - REQUEST ID ["+requestIdStr+"] >> " + currentStatus);
 							                		  String HeaderTxt = driver.findElement(By.xpath("//*[@id=\"DRIVEN_CH_41\"]")).getText();
@@ -278,6 +285,7 @@ public class nce_extension {
 								                	
 								                  //STATUS: POSITION CREATED IN SP
 							                	  statusElemWait();currentStatus = statusWait();
+							                	  Thread.sleep(500);
 							                	  if(currentStatus.trim().contains("Position Created in SP")) {
 													  error=currentStatus; 
 												  }
@@ -329,7 +337,7 @@ public class nce_extension {
 					WebDriverWait wait = new WebDriverWait(driver, 5);
 			//Check ProjId with value?
 			if (!reqIDVal.isEmpty()) {
-					invalidataHandler();
+//					invalidataHandler();
 					statusElemWait();currentStatus = statusWait(); 
 					if (currentStatus.trim().contains("Position Created in SP")) {
 						reDefineCheck();
@@ -405,8 +413,7 @@ public class nce_extension {
 							}
 						 }
 					   }
-						
-//						//Populate create fileds
+						//Populate fields
 						for (int ctr = 1; ctr <= 29	; ctr++) {
 							 String ctrStr=Integer.toString(ctr);
 							
@@ -418,40 +425,126 @@ public class nce_extension {
 						            System.out.println(ctr+"|"+prop.getProperty(ctrStr)+"|"+dataList.get(ctr+12));
 									
 						            if (ctr==3) {
+						            	System.out.println("Country");
 										Select DropDown = new Select(driver.findElement(By.id("REQD.P.COUNTRY")));
 
 										DropDown.selectByIndex(0);
 										DropDown.selectByVisibleText(dataList.get(ctr+12));
+									} else if(ctr==13) {
+						            	System.out.println("Reason Position Needed");
+										Select DropDown = new Select(driver.findElement(By.id("REQD.P.WFM_REASON_POSITION_NEEDED")));
+
+										DropDown.selectByIndex(0);
+										DropDown.selectByVisibleText(dataList.get(ctr+12));
+									} else if(ctr==12) {
+						            	System.out.println("Bill Type");
+										Select DropDown = new Select(driver.findElement(By.id("REQD.P.WFM_BILL_TYPE")));
+
+										DropDown.selectByIndex(0);
+										DropDown.selectByVisibleText(dataList.get(ctr+12));
+									} else if(ctr==11) {
+						            	System.out.println("Resource Type");
+										Select DropDown = new Select(driver.findElement(By.id("REQD.P.WFM_RESOURCE_TYPE")));
+
+										DropDown.selectByIndex(0);
+										DropDown.selectByVisibleText(dataList.get(ctr+12));
+									} else if(ctr==30) {
+						            	System.out.println("Position Work Location");
+										Select DropDown = new Select(driver.findElement(By.id("REQD.P.WFM_LOC_ALIGN_TO_WPG")));
+
+										DropDown.selectByIndex(0);
+										DropDown.selectByVisibleText(dataList.get(ctr+12));
+									} else if(ctr==29) {
+						            	System.out.println("Location Conts Constrained");
+						            	if(dataList.get(ctr+12).toLowerCase().contains("yes")) {
+						            		WebElement element = driver.findElement(By.id("REQD.P.WFM_LOCTAION_CONTRACTUALLY_Y"));
+						            		((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", element);
+											 element.click();
+											 System.out.println(element.isSelected());
+											 if(!element.isSelected()) {
+												 element.click();
+											 }
+						            	}
+						            	if(dataList.get(ctr+12).toLowerCase().contains("no")) {
+						            		WebElement element = driver.findElement(By.id("REQD.P.WFM_LOCTAION_CONTRACTUALLY_N"));
+											 element.click();
+											 System.out.println(element.isSelected());
+											 if(!element.isSelected()) {
+												 element.click();
+											 }
+						            	}
+						            	
 									} else {
-										if (ctr==13) {
-							            	System.out.println("Reason Position Needed");
-											Select DropDown = new Select(driver.findElement(By.id("REQD.P.WFM_REASON_POSITION_NEEDED")));
-
-											DropDown.selectByIndex(0);
-											DropDown.selectByVisibleText(dataList.get(ctr+12));
-										} else {
-											  By fieldPath = By.id(prop.getProperty(ctrStr));
-												wait.until(ExpectedConditions.presenceOfElementLocated(fieldPath));
-												wait.until(ExpectedConditions.elementToBeClickable(fieldPath));
-												WebElement field = wait.until(ExpectedConditions.presenceOfElementLocated(fieldPath));
-												field.clear();
-												
-												if (ctr==8) {
-													field.clear();
-												}
-
-												
-												Thread.sleep(200);
-												field.sendKeys(dataList.get(ctr+12).trim());
-												field.sendKeys(Keys.TAB);
+										By fieldPath = By.id(prop.getProperty(ctrStr));
+										wait.until(ExpectedConditions.presenceOfElementLocated(fieldPath));
+										wait.until(ExpectedConditions.elementToBeClickable(fieldPath));
+										WebElement field = wait.until(ExpectedConditions.presenceOfElementLocated(fieldPath));
+										field.clear();
+										
+										if (ctr==8) {
+											field.clear();
 										}
+										
+										if(ctr==18 || ctr==19) {
+											Thread.sleep(200);
+											field.clear();
+											field.sendKeys(dataList.get(ctr+12).trim());
+											field.clear();
+											field.sendKeys(dataList.get(ctr+12).trim());
+											field.sendKeys(Keys.TAB);
+										} else {
+											Thread.sleep(200);
+											field.sendKeys(dataList.get(ctr+12).trim());
+											field.sendKeys(Keys.TAB);
+										}
+										
+										//ALERT POP UP MESSAGE Apply Changes
+										alertHandler();
+										if (!error.isEmpty()) {
+											System.out.println("[ERROR]:"+error);
+											break;
+										}
+										Thread.sleep(1000);
+										//PPMC ERROR HANDLER
+										invalidataHandler(dataList.get(ctr+12));
+										Thread.sleep(1000);
+										//Using Default Values if data Fails
+										if (!error.isEmpty()) {
+											if(ctr==7) {
+												error="";
+												System.out.println("Using Default Value for Requested Resource");
+												field.sendKeys("");
+
+												field.sendKeys(Keys.TAB);
+											} else if (ctr==25) {
+												error="";
+												System.out.println("Using Default Value for Primary Skill");
+												field.sendKeys("ITIL - General");
+
+												field.sendKeys(Keys.TAB);
+											}else if (ctr==27) {
+												error="";
+												System.out.println("Using Default Value for Secondary Skill");
+												field.sendKeys("Tools - General Delivery - Other");
+
+												field.sendKeys(Keys.TAB);
+											}else {
+												System.out.println("[Data Handler ERROR ]:"+error);
+												break;
+											}
+										}
+
+										
+										
 									}
 						            
-						          
-
-
-									alertHandler();	if (!error.isEmpty()) {break;}
-									invalidataHandler();if (!error.isEmpty()) {break;}
+									alertHandler();	if (!error.isEmpty()) {
+										System.out.println("[ERROR]:"+error);
+										break;}
+									
+									invalidataHandler(dataList.get(ctr+12));if (!error.isEmpty()) {
+										System.out.println("[ERROR]:"+error);
+										break;}
 									
 						        } catch (Exception e) {}      
 						     }
@@ -971,10 +1064,9 @@ public class nce_extension {
 		   }
 		
 	}
-	
+
 		
-	
-		public static void invalidataHandler() {
+		public static void invalidataHandler(String dataIssue) {
 			try {
 				Thread.sleep(3000);
 				List<WebElement> iframe=driver.findElements(By.tagName("iframe"));
@@ -983,9 +1075,7 @@ public class nce_extension {
 						 	Thread.sleep(1000);
 						    iframe.get(i).sendKeys(Keys.ESCAPE);
 					        Thread.sleep(1000);
-					      error="[Error] Data provided missing or not found";
-					     System.out.println("RECORD ["+id+"] - PROJECT ID ["+requestIdStr+"] >> [DATA ISSUE]");
-						 break;
+					      error=dataIssue;
 					 }
 				 }
 			} catch (Exception e) {
